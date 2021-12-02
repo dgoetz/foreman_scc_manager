@@ -1,19 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
+import SCCProductView from './components/SCCProductView/SCCProductView';
 
-const SCCProductPage = ({ scc_acc_id, scc_products_init, ...props }) => {
+const SCCProductPage = ({ sccAccId, sccProductsInit, ...props }) => (
+  <SCCProductView sccProducts={sccProductsInit} />
+);
 
 SCCProductPage.propTypes = {
-  scc_acc_id: PropTypes.number.isRequired,
-  scc_products: PropTypes.array,
-  scc_products_init: PropTypes.object,
+  sccAccId: PropTypes.number.isRequired,
+  sccProducts: PropTypes.array,
+  sccProductsInit: PropTypes.array,
   fetchProducts: PropTypes.func,
 };
 
 SCCProductPage.defaultProps = {
-  scc_acc_id: undefined,
-  scc_products: undefined,
+  sccAccId: undefined,
+  sccProducts: undefined,
 };
 
 export default SCCProductPage;
