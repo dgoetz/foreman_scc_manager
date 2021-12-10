@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import SCCRepoView from './SCCRepoView';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { foremanUrl } from 'foremanReact/common/helpers';
 import {
@@ -28,9 +29,9 @@ const addCheckBoxToTree = (tree) => {
 
 const addKatelloLinkToTree = (tree) => {
   const url = foremanUrl(`/products/${tree.product_id}`);
-  const customBadgeContent = [];
   // Link component needs to be wrapped in a Router
   tree.customBadgeContent.push(
+<<<<<<< HEAD
     <BrowserRouter>
       <Link to={url}>
         <Tooltip content={__('Go to Product page')}>
@@ -40,12 +41,23 @@ const addKatelloLinkToTree = (tree) => {
         </Tooltip>
       </Link>
     </BrowserRouter>
+=======
+    <>
+      <BrowserRouter>
+        <Link to={url}>
+          <Badge>
+            <ArrowRightIcon />
+          </Badge>
+        </Link>
+      </BrowserRouter>
+    </>
+>>>>>>> 0e5b7e5 (Add repositories to product view)
   );
-  tree.customBadgeContent = customBadgeContent;
 
   return tree;
 };
 
+<<<<<<< HEAD
 const addEditIcon = (tree, editProductTree) => {
   tree.customBadgeContent.push(
     <Tooltip content={__('Add more sub products to Product tree')}>
@@ -57,39 +69,41 @@ const addEditIcon = (tree, editProductTree) => {
         <Icon name="edit" type="pf" size="2x" />
       </Button>
     </Tooltip>
+=======
+const addEditIcon = (tree) => {
+  tree.customBadgeContent.push(
+    <>
+      <Badge key={`icon${tree.product_id.toString()}`}>
+        <PencilAltIcon />
+      </Badge>
+    </>
+>>>>>>> 0e5b7e5 (Add repositories to product view)
   );
-  tree.customBadgeContent.push(badge);
 
   return tree;
 };
 
 const addReposToTree = (tree) => {
   tree.customBadgeContent.push(
+<<<<<<< HEAD
     <Tooltip content={__('Show currently added repositories')}>
       <SCCRepoView
         sccRepos={tree.scc_repositories}
         sccProductId={tree.product_id}
       />
     </Tooltip>
+=======
+    <SCCRepoView
+      sccRepos={tree.scc_repositories}
+      sccProductId={tree.product_id}
+    />
+>>>>>>> 0e5b7e5 (Add repositories to product view)
   );
   return tree;
 };
 
-const addValidationStatusToTree = (tree) => {
-  tree.customBadgeContent.push(
-    <Tooltip content={__('Please check your SUSE subscription')}>
-      <Button variant="plain">
-        <Icon name="warning-triangle-o" type="pf" size="2x" />
-      </Button>
-    </Tooltip>
-  );
-  return tree;
-};
-
-const setupTreeViewListItem = (tree, isRoot, editProductTree) => {
-  tree.key = 'view'.concat(tree.id.toString());
+const setupTreeViewListItem = (tree, isRoot) => {
   tree.customBadgeContent = [];
-  if (!tree.subscription_valid) addValidationStatusToTree(tree);
   addReposToTree(tree);
   addCheckBoxToTree(tree);
   if (tree.product_id !== null) {
