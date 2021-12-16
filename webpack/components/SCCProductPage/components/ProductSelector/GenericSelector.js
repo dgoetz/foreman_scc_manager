@@ -15,6 +15,7 @@ const GenericSelector = ({
 
   useEffect(() => {
     setFilteredItems(selectionItems);
+    setSelected(initialLabel);
   }, [selectionItems]);
 
   const onToggle = (selectorOpen) => {
