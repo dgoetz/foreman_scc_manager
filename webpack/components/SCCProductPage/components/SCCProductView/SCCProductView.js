@@ -14,6 +14,7 @@ import {
 import {
   ArrowRightIcon,
   PencilAltIcon,
+  ExclamationCircleIcon,
   //  OutlinedCircleIcon,
   // OutlinedCheckCircleIcon,
 } from '@patternfly/react-icons';
@@ -102,10 +103,22 @@ const addReposToTree = (tree) => {
   return tree;
 };
 
+const addValidationStatusToTree = (tree) => {
+  tree.customBadgeContent.push(
+    <>
+      <Badge key={`valid${tree.product_id.toString()}`}>
+        <ExclamationCircleIcon />
+      </Badge>
+    </>
+  );
+  return tree;
+};
+
 const setupTreeViewListItem = (tree, isRoot) => {
   tree.customBadgeContent = [];
   addReposToTree(tree);
   addCheckBoxToTree(tree);
+  if (!tree.subscription_valid) addValidationStatusToTree(tree);
   if (tree.product_id !== null) {
     addKatelloLinkToTree(tree);
     if (isRoot === true) {

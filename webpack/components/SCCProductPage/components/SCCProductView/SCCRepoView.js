@@ -38,7 +38,7 @@ const createRepoDropDownItem = (repo, sccProductId) => (
           </Tooltip>
         )
       ) : (
-        <OutlinedCircleIcon />
+        <ExclamationCircleIcon />
       )
     }
   >
