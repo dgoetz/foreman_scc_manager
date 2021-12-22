@@ -181,28 +181,37 @@ const SCCProductView = ({ sccProducts }) => {
   return (
     <Card>
       <CardTitle>{__('Subscribed SCC Products')}</CardTitle>
-      <CardBody>
-        <Button variant="link" onClick={collapseAll}>
-          {__('Collapse all')}
-        </Button>
-        <Button variant="link" onClick={expandAll}>
-          {__('Expand all')}
-        </Button>
+      {sccProducts.lenght > 0 && (
+        <CardBody>
+          <Button variant="link" onClick={collapseAll}>
+            {__('Collapse all')}
+          </Button>
+          <Button variant="link" onClick={expandAll}>
+            {__('Expand all')}
+          </Button>
 
-        <Button variant="link" onClick={showFullTree}>
-          {__('Show all')}
-        </Button>
-        <Button variant="link" onClick={showSubscribed}>
-          {__('Show subscribed only')}
-        </Button>
-        <TreeView
-          data={showAll ? allProducts : subscribedProducts}
-          allExpanded={allExpanded}
-          hasChecks
-          hasBadges
-          hasGuides
-        />
-      </CardBody>
+          <Button variant="link" onClick={showFullTree}>
+            {__('Show all')}
+          </Button>
+          <Button variant="link" onClick={showSubscribed}>
+            {__('Show subscribed only')}
+          </Button>
+          <TreeView
+            data={showAll ? allProducts : subscribedProducts}
+            allExpanded={allExpanded}
+            hasChecks
+            hasBadges
+            hasGuides
+          />
+        </CardBody>
+      )}
+      {sccProducts.length == 0 && (
+        <CardBody>
+          {__(
+            'No SCC products imported. Please add new products by pressing the button below.'
+          )}
+        </CardBody>
+      )}
     </Card>
   );
 };
