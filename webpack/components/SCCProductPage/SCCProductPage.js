@@ -12,6 +12,11 @@ const SCCProductPage = ({ canCreate, sccAccId, sccProductsInit, ...props }) => {
   const openProductSelection = (evt) => {
     setSelectOpen(true);
   };
+
+  const subscribeProducts = (sccProductIds) => {
+    props.subscribeProductsAction(sccAccId, sccProductIds);
+  };
+
   return sccProductsInit.length > 0 ? (
     <>
       <SCCProductView
@@ -26,9 +31,12 @@ const SCCProductPage = ({ canCreate, sccAccId, sccProductsInit, ...props }) => {
         {__('Add new SUSE products')}
       </Button>
       <br />
-      <br />
-      <br />
-      {selectOpen && <ProductSelector sccProducts={sccProductsInit} />}
+      {selectOpen && (
+        <ProductSelector
+          sccProducts={sccProductsInit}
+          subscribeProducts={subscribeProducts}
+        />
+      )}
     </>
   ) : (
     <EmptySccProducts sccAccountId={sccAccId} canCreate={canCreate} />
@@ -40,7 +48,6 @@ SCCProductPage.propTypes = {
   sccAccId: PropTypes.number.isRequired,
   sccProducts: PropTypes.array,
   sccProductsInit: PropTypes.array,
-  fetchProducts: PropTypes.func,
 };
 
 SCCProductPage.defaultProps = {

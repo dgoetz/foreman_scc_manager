@@ -25,7 +25,7 @@ const filterArchByVersionAndProduct = (sccProducts, product, version) =>
       .filter((p) => p.product_category === product && p.version === version)
       .map((i) => i.arch)
   ).sort();
-const ProductSelector = ({ sccProducts }) => {
+const ProductSelector = ({ sccProducts, subscribeProducts }) => {
   const [productItems, setProductItems] = useState(
     uniq(sccProducts.map((p) => p.product_category))
   );
@@ -64,6 +64,10 @@ const ProductSelector = ({ sccProducts }) => {
       )
     );
   };
+  const triggerProductSubscription = (sccProductIds) => {
+    setShowSearchTree(false);
+    subscribeProducts(sccProductIds);
+  };
 
   return (
     <Card>
@@ -97,7 +101,12 @@ const ProductSelector = ({ sccProducts }) => {
         </Button>{' '}
         <br />
         <br />
-        {showSearchTree && <TreeSelector sccProducts={filteredSccProducts} />}
+        {showSearchTree && (
+          <TreeSelector
+            sccProducts={filteredSccProducts}
+            subscribeProducts={triggerProductSubscription}
+          />
+        )}
       </CardBody>
     </Card>
   );
@@ -105,6 +114,7 @@ const ProductSelector = ({ sccProducts }) => {
 
 ProductSelector.propTypes = {
   sccProducts: PropTypes.array,
+  subscribeProducts: PropTypes.func,
 };
 
 ProductSelector.defaultProps = {

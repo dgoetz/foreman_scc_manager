@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { TreeView, Button, Badge } from '@patternfly/react-core';
-import { cloneDeep, merge } from 'lodash';
+import { TreeView, Button } from '@patternfly/react-core';
+import { cloneDeep, merge, flatten, flattenDeep } from 'lodash';
+
+const getCheckedElements = (tree) => {
+  let ids = [];
+  if (tree.checkProps.checked && tree.product_id === null) {
+    ids.push(tree.id);
+  }
+  if ('children' in tree) {
+    ids = ids.concat(
+      flattenDeep(tree.children.map((c) => getCheckedElements(c)))
+    );
+  }
+  return ids;
+};
 
 const addCheckBoxToTree = (tree) => {
   const checkProps = {};
@@ -15,7 +28,6 @@ const addCheckBoxToTree = (tree) => {
 
 const addParentToTree = (tree, par) => {
   tree.parent = par;
-
   return tree;
 };
 
@@ -49,7 +61,7 @@ const uncheckAllChildren = (tree) => {
   return tree;
 };
 
-const TreeSelector = ({ sccProducts }) => {
+const TreeSelector = ({ sccProducts, subscribeProducts }) => {
   const [sccProductTree, setSccProductTree] = useState(
     cloneDeep(sccProducts).map(setupTreeViewListItem)
   );
@@ -74,7 +86,14 @@ const TreeSelector = ({ sccProducts }) => {
     setSccProductTree([...merge(sccProductTree, getRootParent(treeViewItem))]);
   };
 
-  const submitForm = (evt) => {};
+  const submitForm = (evt) => {
+    const productsToSubscribe = flatten(
+      sccProductTree
+        .filter((p) => p.checkProps.checked)
+        .map((p) => getCheckedElements(p))
+    );
+    subscribeProducts(productsToSubscribe);
+  };
 
   return (
     <>
@@ -136,6 +155,7 @@ const TreeSelector = ({ sccProducts }) => {
 
 TreeSelector.propTypes = {
   sccProducts: PropTypes.array,
+  subscribeProducts: PropTypes.func,
 };
 
 TreeSelector.defaultProps = {

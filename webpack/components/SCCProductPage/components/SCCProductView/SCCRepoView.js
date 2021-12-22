@@ -16,9 +16,11 @@ const createKatelloRepoLink = (repo, sccProductId) => {
     `/products/${sccProductId}/repositories/${repo.katello_root_repository_id}`
   );
   return (
-    <BrowserRouter>
-      <Link to={url}>{repo.name}</Link>
-    </BrowserRouter>
+    <Tooltip content={__('Go to Repository page')}>
+      <BrowserRouter>
+        <Link to={url}>{repo.name}</Link>
+      </BrowserRouter>
+    </Tooltip>
   );
 };
 
@@ -27,8 +29,14 @@ const createRepoDropDownItem = (repo, sccProductId) => (
     key={repo.id}
     component="button"
     icon={
-      repo.katello_root_repository_id !== null ? (
-        <OutlinedCheckCircleIcon />
+      repo.subscription_valid ? (
+        repo.katello_root_repository_id !== null ? (
+          <Icon name="check" type="fa" />
+        ) : (
+          <Tooltip content={__('Repository not imported')}>
+            <Icon name="ban" type="fa" />
+          </Tooltip>
+        )
       ) : (
         <OutlinedCircleIcon />
       )
