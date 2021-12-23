@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, DropdownItem, BadgeToggle } from '@patternfly/react-core';
 import {
-  OutlinedCircleIcon,
-  OutlinedCheckCircleIcon,
-  ExclamationCircleIcon,
-  FolderOpenIcon,
-} from '@patternfly/react-icons';
+  Dropdown,
+  DropdownItem,
+  BadgeToggle,
+  Tooltip,
+} from '@patternfly/react-core';
+import { Icon } from 'patternfly-react';
 import { BrowserRouter, Link } from 'react-router-dom';
 import { foremanUrl } from 'foremanReact/common/helpers';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
@@ -38,7 +38,9 @@ const createRepoDropDownItem = (repo, sccProductId) => (
           </Tooltip>
         )
       ) : (
-        <ExclamationCircleIcon />
+        <Tooltip content={__('Add more sub products to Product tree')}>
+          <Icon name="warning-triangle-o" type="pf" size="2x" />
+        </Tooltip>
       )
     }
   >
@@ -50,8 +52,8 @@ const createRepoDropDownItem = (repo, sccProductId) => (
 
 const SCCRepoView = ({ sccRepos, sccProductId }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const onToggle = (isOpen) => {
-    setIsOpen(isOpen);
+  const onToggle = (toggle) => {
+    setIsOpen(toggle);
   };
 
   const onFocus = () => {

@@ -1,6 +1,6 @@
 {
   "name": "foreman_scc_manager",
-  "version": "1.8.12",
+  "version": "1.8.16",
   "description": "Foreman plugin to sync SUSE Customer Center products and repositories into Katello ",
   "main": "index.js",
   "directories": {

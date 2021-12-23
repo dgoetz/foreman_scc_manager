@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@patternfly/react-core';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
-import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
+import { PlusIcon } from '@patternfly/react-icons';
 import SCCProductView from './components/SCCProductView/SCCProductView';
 import EmptySccProducts from './EmptySccProducts';
 import ProductSelector from './components/ProductSelector/ProductSelector';
@@ -23,11 +23,7 @@ const SCCProductPage = ({ canCreate, sccAccId, sccProductsInit, ...props }) => {
         sccProducts={sccProductsInit.filter((prod) => prod.product_id !== null)}
       />
       <br />
-      <Button
-        variant="link"
-        icon={<PlusCircleIcon />}
-        onClick={openProductSelection}
-      >
+      <Button variant="link" icon={<PlusIcon />} onClick={openProductSelection}>
         {__('Add new SUSE products')}
       </Button>
       <br />
