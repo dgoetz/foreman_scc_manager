@@ -9,6 +9,7 @@ import ProductSelector from './components/ProductSelector/ProductSelector';
 
 const SCCProductPage = ({ canCreate, sccAccId, sccProductsInit, ...props }) => {
   const [selectOpen, setSelectOpen] = useState(false);
+  const [productToEdit, setProductToEdit] = useState(0);
   const openProductSelection = (evt) => {
     setSelectOpen(true);
   };
@@ -17,10 +18,18 @@ const SCCProductPage = ({ canCreate, sccAccId, sccProductsInit, ...props }) => {
     props.subscribeProductsAction(sccAccId, sccProductIds);
   };
 
+  const editProductTree = (productId) => {
+    setProductToEdit(productId);
+    if (productId !== 0) {
+      setSelectOpen(true);
+    }
+  };
+
   return sccProductsInit.length > 0 ? (
     <>
       <SCCProductView
         sccProducts={sccProductsInit.filter((prod) => prod.product_id !== null)}
+        editProductTreeGlobal={editProductTree}
       />
       <br />
       <Button variant="link" icon={<PlusIcon />} onClick={openProductSelection}>
@@ -31,6 +40,7 @@ const SCCProductPage = ({ canCreate, sccAccId, sccProductsInit, ...props }) => {
         <ProductSelector
           sccProducts={sccProductsInit}
           subscribeProducts={subscribeProducts}
+          editProductId={productToEdit}
         />
       )}
     </>

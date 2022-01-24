@@ -26,7 +26,6 @@ const addKatelloLinkToTree = (tree) => {
   const url = foremanUrl(`/products/${tree.product_id}`);
   // Link component needs to be wrapped in a Router
   tree.customBadgeContent.push(
-<<<<<<< HEAD
     <BrowserRouter>
       <Link to={url}>
         <Tooltip content={__('Go to Product page')}>
@@ -36,24 +35,10 @@ const addKatelloLinkToTree = (tree) => {
         </Tooltip>
       </Link>
     </BrowserRouter>
-=======
-    <>
-      <BrowserRouter>
-        <Link to={url}>
-          <Tooltip content={__('Go to Product page')}>
-            <Button variant="plain" id="tt-ref">
-              <Icon name="external-link" type="fa" />
-            </Button>
-          </Tooltip>
-        </Link>
-      </BrowserRouter>
-    </>
->>>>>>> 0e5b7e5 (Add repositories to product view)
   );
   return tree;
 };
 
-<<<<<<< HEAD
 const addEditIcon = (tree, editProductTree) => {
   tree.customBadgeContent.push(
     <Tooltip content={__('Add more sub products to Product tree')}>
@@ -65,17 +50,6 @@ const addEditIcon = (tree, editProductTree) => {
         <Icon name="edit" type="pf" size="2x" />
       </Button>
     </Tooltip>
-=======
-const addEditIcon = (tree) => {
-  tree.customBadgeContent.push(
-    <>
-      <Tooltip content={__('Add more sub products to Product tree')}>
-        <Button variant="plain" id="tt-ref">
-          <Icon name="edit" type="pf" size="2x" />
-        </Button>
-      </Tooltip>
-    </>
->>>>>>> 0e5b7e5 (Add repositories to product view)
   );
 
   return tree;
@@ -83,19 +57,12 @@ const addEditIcon = (tree) => {
 
 const addReposToTree = (tree) => {
   tree.customBadgeContent.push(
-<<<<<<< HEAD
     <Tooltip content={__('Show currently added repositories')}>
       <SCCRepoView
         sccRepos={tree.scc_repositories}
         sccProductId={tree.product_id}
       />
     </Tooltip>
-=======
-    <SCCRepoView
-      sccRepos={tree.scc_repositories}
-      sccProductId={tree.product_id}
-    />
->>>>>>> 0e5b7e5 (Add repositories to product view)
   );
   return tree;
 };
@@ -104,7 +71,7 @@ const addValidationStatusToTree = (tree) => {
   tree.customBadgeContent.push(
     <>
       <Tooltip content={__('Please check your SUSE subscription')}>
-        <Button variant="plain" id="tt-ref">
+        <Button variant="plain">
           <Icon name="warning-triangle-o" type="pf" size="2x" />
         </Button>
       </Tooltip>
@@ -113,7 +80,8 @@ const addValidationStatusToTree = (tree) => {
   return tree;
 };
 
-const setupTreeViewListItem = (tree, isRoot) => {
+const setupTreeViewListItem = (tree, isRoot, editProductTree) => {
+  tree.key = tree.id.toString();
   tree.customBadgeContent = [];
   if (!tree.subscription_valid) addValidationStatusToTree(tree);
   addReposToTree(tree);
@@ -121,7 +89,7 @@ const setupTreeViewListItem = (tree, isRoot) => {
   if (tree.product_id !== null) {
     addKatelloLinkToTree(tree);
     if (isRoot === true) {
-      addEditIcon(tree);
+      addEditIcon(tree, editProductTree);
     }
   }
   if ('children' in tree) {
@@ -147,12 +115,17 @@ const filterDeep = (tree) => {
   return null;
 };
 
-const SCCProductView = ({ sccProducts }) => {
+const SCCProductView = ({ sccProducts, editProductTreeGlobal }) => {
+  const editProductTree = (evt, productId) => {
+    editProductTreeGlobal(productId);
+  };
   const sccProductsClone = cloneDeep(sccProducts);
   const [allExpanded, setAllExpanded] = useState(false);
   // wrap actual iterator function into anonymous function to pass extra parameters
   const [allProducts, setAllProducts] = useState(
-    sccProductsClone.map((tree) => setupTreeViewListItem(tree, true))
+    sccProductsClone.map((tree) =>
+      setupTreeViewListItem(tree, true, editProductTree)
+    )
   );
   const [subscribedProducts, setSubscribedProducts] = useState(null);
   const [showAll, setShowAll] = useState(true);
@@ -217,10 +190,12 @@ const SCCProductView = ({ sccProducts }) => {
 
 SCCProductView.propTypes = {
   sccProducts: PropTypes.array,
+  editProductTreeGlobal: PropTypes.func,
 };
 
 SCCProductView.defaultProps = {
   sccProducts: undefined,
+  editProductTreeGlobal: undefined,
 };
 
 export default SCCProductView;

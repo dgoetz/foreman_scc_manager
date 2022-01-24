@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import GenericSelector from './GenericSelector';
 import TreeSelector from './TreeSelector';
@@ -25,7 +25,8 @@ const filterArchByVersionAndProduct = (sccProducts, product, version) =>
       .filter((p) => p.product_category === product && p.version === version)
       .map((i) => i.arch)
   ).sort();
-const ProductSelector = ({ sccProducts, subscribeProducts }) => {
+
+const ProductSelector = ({ sccProducts, subscribeProducts, editProductId }) => {
   const [productItems, setProductItems] = useState(
     uniq(sccProducts.map((p) => p.product_category))
   );
@@ -37,6 +38,20 @@ const ProductSelector = ({ sccProducts, subscribeProducts }) => {
   const [filteredSccProducts, setFilteredSccProducts] = useState([]);
   const [showSearchTree, setShowSearchTree] = useState(false);
 
+  useEffect(() => {
+    if (editProductId !== 0) {
+      // the id is unique, so there never should be more than 1 element in the array
+      const product = sccProducts.filter((p) => p.id === editProductId);
+      if (product.length > 0) {
+        setSelectedProduct(product[0].product_category);
+        setSelectedArch(product[0].arch);
+        setSelectedVersion(product[0].version);
+        setFilteredSccProducts(product);
+        setShowSearchTree(true);
+      }
+    }
+  }, [editProductId, sccProducts]);
+
   const onProductSelectionChange = (value) => {
     setSelectedProduct(value);
     setVersionItems(filterVersionByProduct(sccProducts, value));
@@ -44,15 +59,18 @@ const ProductSelector = ({ sccProducts, subscribeProducts }) => {
     setSelectedVersion('');
     setSelectedArch('');
   };
+
   const onVersionSelectionChange = (value) => {
     setSelectedVersion(value);
     setArchItems(
       filterArchByVersionAndProduct(sccProducts, selectedProduct, value)
     );
   };
+
   const onArchSelectionChange = (value) => {
     setSelectedArch(value);
   };
+
   const filterProducts = (evt) => {
     setShowSearchTree(true);
     setFilteredSccProducts(
@@ -64,6 +82,7 @@ const ProductSelector = ({ sccProducts, subscribeProducts }) => {
       )
     );
   };
+
   const triggerProductSubscription = (sccProductIds) => {
     setShowSearchTree(false);
     subscribeProducts(sccProductIds);
@@ -78,21 +97,27 @@ const ProductSelector = ({ sccProducts, subscribeProducts }) => {
           selectionItems={productItems}
           setGlobalSelected={onProductSelectionChange}
           screenReaderLabel={__('Product selection')}
-          initialLabel={__('Select Product')}
+          initialLabel={
+            selectedProduct === '' ? __('Select Product') : selectedProduct
+          }
         />{' '}
         <GenericSelector
           key="vers-select"
           selectionItems={versionItems}
           setGlobalSelected={onVersionSelectionChange}
           screenReaderLabel={__('Version selection')}
-          initialLabel={__('Select Version')}
+          initialLabel={
+            selectedVersion === '' ? __('Select Version') : selectedVersion
+          }
         />
         <GenericSelector
           key="arch-select"
           selectionItems={archItems}
           setGlobalSelected={onArchSelectionChange}
           screenReaderLabel={__('Architecture selection')}
-          initialLabel={__('Select Architecture')}
+          initialLabel={
+            selectedArch === '' ? __('Select Architecture') : selectedArch
+          }
         />{' '}
         <br />
         <br />
@@ -115,10 +140,12 @@ const ProductSelector = ({ sccProducts, subscribeProducts }) => {
 ProductSelector.propTypes = {
   sccProducts: PropTypes.array,
   subscribeProducts: PropTypes.func,
+  editProductId: PropTypes.number,
 };
 
 ProductSelector.defaultProps = {
   sccProducts: [],
+  editProductId: 0,
 };
 
 export default ProductSelector;

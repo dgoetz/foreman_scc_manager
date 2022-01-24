@@ -38,7 +38,7 @@ const createRepoDropDownItem = (repo, sccProductId) => (
           </Tooltip>
         )
       ) : (
-        <Tooltip content={__('Add more sub products to Product tree')}>
+        <Tooltip content={__('Please check your SUSE subscription')}>
           <Icon name="warning-triangle-o" type="pf" size="2x" />
         </Tooltip>
       )
