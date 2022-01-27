@@ -81,14 +81,14 @@ const addValidationStatusToTree = (tree) => {
 };
 
 const setupTreeViewListItem = (tree, isRoot, editProductTree) => {
-  tree.key = tree.id.toString();
+  tree.key = 'view'.concat(tree.id.toString());
   tree.customBadgeContent = [];
   if (!tree.subscription_valid) addValidationStatusToTree(tree);
   addReposToTree(tree);
   addCheckBoxToTree(tree);
   if (tree.product_id !== null) {
     addKatelloLinkToTree(tree);
-    if (isRoot === true) {
+    if (isRoot) {
       addEditIcon(tree, editProductTree);
     }
   }
@@ -120,7 +120,7 @@ const SCCProductView = ({ sccProducts, editProductTreeGlobal }) => {
     editProductTreeGlobal(productId);
   };
   const sccProductsClone = cloneDeep(sccProducts);
-  const [allExpanded, setAllExpanded] = useState(false);
+  const [allExpanded, setAllExpanded] = useState();
   // wrap actual iterator function into anonymous function to pass extra parameters
   const [allProducts, setAllProducts] = useState(
     sccProductsClone.map((tree) =>
