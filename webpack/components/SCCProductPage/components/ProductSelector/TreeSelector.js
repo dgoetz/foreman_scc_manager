@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { TreeView, Button, Tooltip } from '@patternfly/react-core';
+import { TreeView, Button, Tooltip, Switch } from '@patternfly/react-core';
 import { cloneDeep, merge, flatten, flattenDeep } from 'lodash';
 import RepoSelector from './RepoSelector';
 
@@ -32,38 +32,45 @@ const addParentToTree = (tree, par) => {
   return tree;
 };
 
-const addRepoSelectorToTree = (tree, disableRepos, selectAll) => {
+const addRepoSelectorToTree = (tree, disableRepos, activateDebugFilter) => {
   tree.customBadgeContent[0] = (
     <Tooltip content={__('Filter repositories')}>
       <RepoSelector
         sccRepos={tree.scc_repositories}
-        disableRepos={ tree.product_id === null && !tree.checkProps.checked }
-        selectAll={selectAll}
+        disableRepos={tree.product_id === null && !tree.checkProps.checked}
+        activateDebugFilter={activateDebugFilter}
+        productAlreadySynced={tree.product_id !== null}
       />{' '}
     </Tooltip>
   );
   return tree;
 };
 
-const setupTreeViewListItem = (tree, isRoot) => {
+const setupTreeViewListItem = (tree, isRoot, activateDebugFilter) => {
   tree.customBadgeContent = [];
   addCheckBoxToTree(tree);
-  addRepoSelectorToTree(tree, tree.product_id === null);
+  addRepoSelectorToTree(tree, tree.product_id === null, activateDebugFilter);
   if ('children' in tree) {
-    tree.children = tree.children.map(setupTreeViewListItem, false);
+    tree.children = tree.children.map(
+      setupTreeViewListItem,
+      false,
+      activateDebugFilter
+    );
     tree.children.map((child) => addParentToTree(child, tree));
   }
   return tree;
 };
 
-const toggleRepoSelection = (tree, disableRepos) => {
-  addRepoSelectorToTree(tree, disableRepos, tree.checkProps.checked);
+const toggleRepoSelection = (tree, disableRepos, activateDebugFilter) => {
+  addRepoSelectorToTree(tree, disableRepos, activateDebugFilter);
 
-  if (disableRepos){
-    if ('children' in tree) tree.children.map((p) => toggleRepoSelection(p, disableRepos))
-  } else {
-    if (tree.parent) toggleRepoSelection(tree.parent, disableRepos);
-  }
+  if (disableRepos) {
+    if ('children' in tree)
+      tree.children.map((p) =>
+        toggleRepoSelection(p, disableRepos, activateDebugFilter)
+      );
+  } else if (tree.parent)
+    toggleRepoSelection(tree.parent, disableRepos, activateDebugFilter);
 
   return tree;
 };
@@ -77,33 +84,23 @@ const checkAllParents = (tree) => {
 
 const getRootParent = (tree) => {
   if (tree.parent) return getRootParent(tree.parent);
+
   return tree;
 };
 
 const uncheckAllChildren = (tree) => {
   if (tree.product_id === null) tree.checkProps.checked = false;
-
   if ('children' in tree) tree.children = tree.children.map(uncheckAllChildren);
 
   return tree;
 };
 
-const checkAllRepos = (tree) => {
-  if (tree.checkProps.checked || tree.product_id !== null) {
-    tree.customBadgeContent = [];
-    addRepoSelectorToTree(tree, false, true);
-
-    if ('children' in tree) {
-      tree.children = tree.children.map(checkAllRepos);
-    }
-  }
-
-  return tree;
-};
-
 const TreeSelector = ({ sccProducts, subscribeProducts }) => {
+  const [activateDebugFilter, setActivateDebugFilter] = useState(true);
   const [sccProductTree, setSccProductTree] = useState(
-    cloneDeep(sccProducts).map(setupTreeViewListItem)
+    cloneDeep(sccProducts).map((p) =>
+      setupTreeViewListItem(p, true, activateDebugFilter)
+    )
   );
   const [allExpanded, setAllExpanded] = useState();
 
@@ -111,15 +108,28 @@ const TreeSelector = ({ sccProducts, subscribeProducts }) => {
     setAllExpanded(false);
   };
 
+  useEffect(() => {
+    setSccProductTree(
+      cloneDeep(sccProducts).map((p) =>
+        setupTreeViewListItem(p, true, activateDebugFilter)
+      )
+    );
+  }, [sccProducts]);
+
   const expandAll = (evt) => {
     setAllExpanded(true);
   };
 
-  const selectAllRepos = (evt) => {
-    const checkedRepoProducts = cloneDeep(sccProductTree).map((p) =>
-      checkAllRepos(p)
+  const debugFilterChange = (evt) => {
+    setActivateDebugFilter(!activateDebugFilter);
+
+    sccProductTree.map((p) =>
+      toggleRepoSelection(
+        p,
+        p.checkProps.checked || p.product_id !== null,
+        !activateDebugFilter
+      )
     );
-    setSccProductTree(checkedRepoProducts);
   };
 
   const onCheck = (evt, treeViewItem) => {
@@ -129,7 +139,7 @@ const TreeSelector = ({ sccProducts, subscribeProducts }) => {
       uncheckAllChildren(treeViewItem);
     }
 
-    toggleRepoSelection(treeViewItem, !evt.target.checked);
+    toggleRepoSelection(treeViewItem, !evt.target.checked, activateDebugFilter);
 
     setSccProductTree([...merge(sccProductTree, getRootParent(treeViewItem))]);
   };
