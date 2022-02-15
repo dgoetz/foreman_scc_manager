@@ -114,8 +114,8 @@ class SccAccountsController < ApplicationController
 
   def scc_product_hash(scc_product)
     scc_product.as_json(:only => [:scc_id, :id, :arch, :version, :product_id, :subscription_valid],
-                        include: { :scc_repositories => { :only => [:id, :name, :katello_root_repository_id, :subscription_valid] } }).
-                        merge('name' => scc_product.pretty_name, 'product_category' => scc_product.name)
+                        include: { :scc_repositories => { :only => [:id, :name, :katello_root_repository_id, :subscription_valid] } })
+               .merge('name' => scc_product.pretty_name, 'product_category' => scc_product.name)
   end
 
   def get_product_tree_hash(scc_product_base)

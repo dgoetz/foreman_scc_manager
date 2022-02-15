@@ -1,19 +1,33 @@
 module Actions
   module SccManager
     class SubscribeProduct < Actions::EntryAction
-      def plan(scc_product)
-        raise _('Product already subscribed!') if scc_product.product
-
-        ::Foreman::Logging.logger('foreman_scc_manager')
-                          .info("Initiating subscription for SccProduct '#{scc_product.friendly_name}'.")
+      def plan(scc_product, scc_repos_to_subscribe)
+        if scc_product.product
+          ::Foreman::Logging.logger('foreman_scc_manager')
+                            .info("SccProduct '#{scc_product.friendly_name}' is already subscribed to.")
+        else
+          ::Foreman::Logging.logger('foreman_scc_manager')
+                            .info("Initiating subscription for SccProduct '#{scc_product.friendly_name}'.")
+        end
         sequence do
-          product_create_action = plan_action(CreateProduct,
-                                              :product_name => scc_product.pretty_name,
-                                              :product_description => scc_product.pretty_description,
-                                              :organization_id => scc_product.organization.id,
-                                              :gpg_key => scc_product.scc_account.katello_gpg_key_id)
+          unless scc_product.product
+            product_create_action = plan_action(CreateProduct,
+                                                :product_name => scc_product.pretty_name,
+                                                :product_description => scc_product.pretty_description,
+                                                :organization_id => scc_product.organization.id,
+                                                :gpg_key => scc_product.scc_account.katello_gpg_key_id)
+          end
           katello_repos = {}
-          scc_product.scc_repositories.each do |repo|
+          # we need to set the repositories to subscribe to
+          scc_repos = []
+          if scc_repos_to_subscribe.empty?
+            scc_repos = scc_product.scc_repositories
+          else
+            # at this point, we need to make sure that the repository list is valid
+            # we want to subscribe only to repos that we have not subscribed before
+            scc_repos = scc_product.scc_repositories.where(id: scc_repos_to_subscribe).where(katello_root_repository_id: nil)
+          end
+          scc_repos.each do |repo|
             arch = scc_product.arch || 'noarch'
             repo_create_action = plan_action(CreateRepository,
                                              :product_id => product_create_action.output[:product_id],
@@ -23,11 +37,12 @@ module Actions
                                              :token => repo.token,
                                              :arch => arch)
             katello_repos[repo.id] = repo_create_action.output[:katello_root_repository_id]
+
+            # connect action to resource (=> make parameters accessable in input)
+            action_subject(scc_product, product_id: product_create_action.output[:product_id])
+            input.update(katello_repos: katello_repos)
+            plan_self
           end
-          # connect action to resource (=> make parameters accessable in input)
-          action_subject(scc_product, product_id: product_create_action.output[:product_id])
-          input.update(katello_repos: katello_repos)
-          plan_self
         end
       end
 
