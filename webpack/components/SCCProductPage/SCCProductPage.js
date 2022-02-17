@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import { Button } from '@patternfly/react-core';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import { PlusIcon } from '@patternfly/react-icons';
@@ -8,6 +9,7 @@ import EmptySccProducts from './EmptySccProducts';
 import ProductSelector from './components/ProductSelector/ProductSelector';
 
 const SCCProductPage = ({ canCreate, sccAccId, sccProductsInit, ...props }) => {
+  const dispatch = useDispatch();
   const [selectOpen, setSelectOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState(0);
   const openProductSelection = (evt) => {
@@ -15,7 +17,7 @@ const SCCProductPage = ({ canCreate, sccAccId, sccProductsInit, ...props }) => {
   };
 
   const subscribeProducts = (sccProductIds) => {
-    props.subscribeProductsAction(sccAccId, sccProductIds);
+    dispatch(props.subscribeProductsAction(sccAccId, sccProductIds));
   };
 
   const editProductTree = (productId) => {
