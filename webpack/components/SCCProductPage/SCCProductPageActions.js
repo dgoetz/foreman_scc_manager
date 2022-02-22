@@ -14,11 +14,20 @@ import { translate as __ } from 'foremanReact/common/I18n';
 export const subscribeProductsAction = (sccAccountId, sccProductIds) =>
   put({
     type: API_OPERATIONS.PUT,
-    key: `subscribe_key${sccAccountId.to_s}${sccProductIds.to_s}`,
+    key: `subscribe_key${sccAccountId.toString()}${sccProductIds.toString()}`,
     url: `/api/scc_accounts/${sccAccountId}/bulk_subscribe`,
     params: { scc_subscribe_product_ids: sccProductIds },
     successToast: () => __('Subscription task started successfully.'),
     errorToast: (error) => __('Starting the subscription task failed.'),
+  });
+
+export const syncSccAccountAction = (sccAccountId) =>
+  put({
+    type: API_OPERATIONS.PUT,
+    key: `syncSccAccountKey${sccAccountId.toString()}`,
+    url: `/api/scc_accounts/${sccAccountId}/sync`,
+    successToast: () => __('Sync task started.'),
+    errorToast: (error) => __('Failed to add task to queue.'),
   });
 
 export const fetchProducts = (sccAccountId) => async (dispatch) => {
