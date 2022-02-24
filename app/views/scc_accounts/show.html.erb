@@ -1,6 +1,6 @@
 <%= webpacked_plugins_js_for :foreman_scc_manager %>
 <%= react_component('SCCProductPage', {
   :canCreate => authorized_for(action: :sync),
-  :sccAccId => @scc_account.id,
+  :sccAccountId => @scc_account.id,
   :sccProductsInit => create_nested_product_tree(@scc_account.scc_products, subscribed_only: false)
 }) %>

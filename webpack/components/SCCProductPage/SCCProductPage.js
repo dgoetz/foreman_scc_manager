@@ -8,16 +8,12 @@ import SCCProductView from './components/SCCProductView/SCCProductView';
 import EmptySccProducts from './EmptySccProducts';
 import ProductSelector from './components/ProductSelector/ProductSelector';
 
-const SCCProductPage = ({ canCreate, sccAccId, sccProductsInit, ...props }) => {
+const SCCProductPage = ({ canCreate, sccAccountId, sccProductsInit, ...props }) => {
   const dispatch = useDispatch();
   const [selectOpen, setSelectOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState(0);
   const openProductSelection = (evt) => {
     setSelectOpen(true);
-  };
-
-  const subscribeProducts = (sccProductIds) => {
-    dispatch(props.subscribeProductsAction(sccAccId, sccProductIds));
   };
 
   const editProductTree = (productId) => {
@@ -41,26 +37,25 @@ const SCCProductPage = ({ canCreate, sccAccId, sccProductsInit, ...props }) => {
       {selectOpen && (
         <ProductSelector
           sccProducts={sccProductsInit}
-          subscribeProducts={subscribeProducts}
+          sccAccountId={sccAccountId}
           editProductId={productToEdit}
         />
       )}
     </>
   ) : (
-    <EmptySccProducts sccAccountId={sccAccId} canCreate={canCreate} />
+    <EmptySccProducts sccAccountId={sccAccountId} canCreate={canCreate} />
   );
 };
 
 SCCProductPage.propTypes = {
   canCreate: PropTypes.bool,
-  sccAccId: PropTypes.number.isRequired,
+  sccAccountId: PropTypes.number.isRequired,
   sccProducts: PropTypes.array,
   sccProductsInit: PropTypes.array,
 };
 
 SCCProductPage.defaultProps = {
   canCreate: false,
-  sccAccId: undefined,
   sccProducts: [],
 };
 

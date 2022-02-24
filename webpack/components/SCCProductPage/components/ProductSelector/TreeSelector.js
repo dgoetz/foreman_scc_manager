@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { TreeView, Button, Tooltip, Switch } from '@patternfly/react-core';
 import { cloneDeep, merge, flatten, flattenDeep } from 'lodash';
 import RepoSelector from './RepoSelector';
+import { subscribeProductsAction } from '../../SCCProductPageActions'
 
 const getCheckedElements = (tree) => {
   let ids = [];
@@ -95,7 +97,8 @@ const uncheckAllChildren = (tree) => {
   return tree;
 };
 
-const TreeSelector = ({ sccProducts, subscribeProducts }) => {
+const TreeSelector = ({ sccProducts, sccAccountId }) => {
+  const dispatch = useDispatch();
   const [activateDebugFilter, setActivateDebugFilter] = useState(true);
   const [sccProductTree, setSccProductTree] = useState(
     cloneDeep(sccProducts).map((p) =>
@@ -150,7 +153,7 @@ const TreeSelector = ({ sccProducts, subscribeProducts }) => {
         .filter((p) => p.checkProps.checked)
         .map((p) => getCheckedElements(p))
     );
-    subscribeProducts(productsToSubscribe);
+    dispatch(subscribeProductsAction(sccAccountId, productsToSubscribe));
   };
 
   return (
@@ -213,7 +216,7 @@ const TreeSelector = ({ sccProducts, subscribeProducts }) => {
 
 TreeSelector.propTypes = {
   sccProducts: PropTypes.array,
-  subscribeProducts: PropTypes.func,
+  sccAccountId: PropTypes.number.isRequired,
 };
 
 TreeSelector.defaultProps = {

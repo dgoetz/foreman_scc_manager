@@ -26,7 +26,7 @@ const filterArchByVersionAndProduct = (sccProducts, product, version) =>
       .map((i) => i.arch)
   ).sort();
 
-const ProductSelector = ({ sccProducts, subscribeProducts, editProductId }) => {
+const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
   const [productItems, setProductItems] = useState(
     uniq(sccProducts.map((p) => p.product_category))
   );
@@ -83,11 +83,6 @@ const ProductSelector = ({ sccProducts, subscribeProducts, editProductId }) => {
     );
   };
 
-  const triggerProductSubscription = (sccProductIds) => {
-    setShowSearchTree(false);
-    subscribeProducts(sccProductIds);
-  };
-
   return (
     <Card>
       <CardTitle>{__('SCC Product Selection')}</CardTitle>
@@ -129,7 +124,7 @@ const ProductSelector = ({ sccProducts, subscribeProducts, editProductId }) => {
         {showSearchTree && (
           <TreeSelector
             sccProducts={filteredSccProducts}
-            subscribeProducts={triggerProductSubscription}
+            sccAccountId={sccAccountId}
           />
         )}
       </CardBody>
@@ -139,7 +134,7 @@ const ProductSelector = ({ sccProducts, subscribeProducts, editProductId }) => {
 
 ProductSelector.propTypes = {
   sccProducts: PropTypes.array,
-  subscribeProducts: PropTypes.func,
+  sccAccountId: PropTypes.number.isRequired,
   editProductId: PropTypes.number,
 };
 

@@ -21,6 +21,16 @@ export const subscribeProductsAction = (sccAccountId, sccProductIds) =>
     errorToast: (error) => __('Starting the subscription task failed.'),
   });
 
+export const subscribeProductsWithReposAction = (sccAccountId, sccProductData) =>
+  put({
+    type: API_OPERATIONS.PUT,
+    key: `subscribe_key${sccAccountId.toString()}${sccProductIds.toString()}`,
+    url: `/api/scc_accounts/${sccAccountId}/bulk_subscribe_with_repos`,
+    params: { scc_product_data: sccProductData },
+    successToast: () => __('Subscription task started successfully.'),
+    errorToast: (error) => __('Starting the subscription task failed.'),
+  });
+
 export const syncSccAccountAction = (sccAccountId) =>
   put({
     type: API_OPERATIONS.PUT,
