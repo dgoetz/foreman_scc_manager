@@ -114,7 +114,7 @@ module Api
             subscribe_task = ForemanTasks.async_task(::Actions::BulkAction,
                                                      ::Actions::SccManager::SubscribeProduct,
                                                      scc_products,
-                                                     [])
+                                                     {})
             format.json { render json: subscribe_task.to_json, status: :ok }
           else
             format.json { render json: { error: 'No Product selected' }, status: :expectation_failed }
@@ -146,10 +146,11 @@ module Api
             if scc_products.empty?
               format.json { render json: { error: _('The selected products cannot be found for this SCC account.') }, status: :unprocessable_entity }
             else
+              action_args = params[:scc_product_data].map { |p| { p['scc_product_id'] => p['repository_list'] } }.inject(:merge)
               subscribe_task = ForemanTasks.async_task(::Actions::BulkAction,
                                                        ::Actions::SccManager::SubscribeProduct,
                                                        scc_products,
-                                                       params[:scc_product_data].pluck(:repitory_list))
+                                                       action_args)
               format.json { render json: subscribe_task.to_json, status: :ok }
             end
           else
@@ -192,6 +193,8 @@ module Api
           :sync
         when 'bulk_subscribe'
           :bulk_subscribe
+        when 'bulk_subscribe_with_repos'
+          :bulk_subscribe_with_repos
         else
           super
         end
