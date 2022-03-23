@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
-import {
-  Tooltip,
-  Icon,
-  Select,
-  SelectOption,
-  SelectGroup,
-  SelectVariant,
-} from '@patternfly/react-core';
-import { merge } from 'lodash';
+import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
 
 const createRepoSelectOption = (repo, disableRepos) => (
   <SelectOption
@@ -51,6 +43,8 @@ const RepoSelector = ({
   disableRepos,
   activateDebugFilter,
   productAlreadySynced,
+  sccProductId,
+  setSelectedReposFromChild,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   // set initial selected values to the already checked repos
@@ -62,31 +56,56 @@ const RepoSelector = ({
       productAlreadySynced
     )
   );
-  const [placeHolder, setPlaceHolder] = useState();
   const onToggle = (toggle) => {
     setIsOpen(toggle);
   };
 
   useEffect(() => {
-    setSelected(
-      setRepoSelection(
-        sccRepos,
-        disableRepos,
-        activateDebugFilter,
-        productAlreadySynced
-      )
+    const selectedRepos = setRepoSelection(
+      sccRepos,
+      disableRepos,
+      activateDebugFilter,
+      productAlreadySynced
     );
-  }, [disableRepos, activateDebugFilter]);
+    setSelected(selectedRepos);
+    setSelectedReposFromChild(
+      sccProductId,
+      sccRepos
+        // make sure that we do not request already subscribed repositories
+        .filter(
+          (repo) =>
+            selectedRepos.includes(repo.name) &&
+            repo.katello_root_repository_id === null
+        )
+        .map((repo) => repo.id)
+    );
+  }, [
+    sccRepos,
+    disableRepos,
+    activateDebugFilter,
+    productAlreadySynced,
+    sccProductId,
+  ]);
 
   const onSelect = (event, selection) => {
-    let sel = [];
+    let selectedRepos = [];
     if (event.target.checked) {
-      sel = [...new Set(selected.concat([selection]))];
+      selectedRepos = [...new Set(selected.concat([selection]))];
     } else {
-      sel = selected.filter((item) => item !== selection);
+      selectedRepos = selected.filter((item) => item !== selection);
     }
-
-    setSelected(sel);
+    setSelected(selectedRepos);
+    setSelectedReposFromChild(
+      sccProductId,
+      sccRepos
+        // make sure that we do not request already subscribed repositories
+        .filter(
+          (repo) =>
+            selectedRepos.includes(repo.name) &&
+            repo.katello_root_repository_id === null
+        )
+        .map((repo) => repo.id)
+    );
   };
 
   const selectOptions = sccRepos.map((repo) =>
@@ -114,6 +133,8 @@ RepoSelector.propTypes = {
   disableRepos: PropTypes.bool,
   activateDebugFilter: PropTypes.bool,
   productAlreadySynced: PropTypes.bool,
+  sccProductId: PropTypes.number.isRequired,
+  setSelectedReposFromChild: PropTypes.func.isRequired,
 };
 
 RepoSelector.defaultProps = {
