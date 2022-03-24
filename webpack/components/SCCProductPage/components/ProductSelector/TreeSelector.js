@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import { TreeView, Button, Tooltip, Switch } from '@patternfly/react-core';
+import {
+  TreeView,
+  Button,
+  Tooltip,
+  Switch,
+  Tile,
+} from '@patternfly/react-core';
 import { cloneDeep, merge } from 'lodash';
 import RepoSelector from './RepoSelector';
 import { subscribeProductsWithReposAction } from '../../SCCProductPageActions';

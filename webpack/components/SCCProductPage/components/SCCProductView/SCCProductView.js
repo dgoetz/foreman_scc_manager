@@ -11,6 +11,7 @@ import {
   CardTitle,
   CardBody,
   Tooltip,
+  Tile,
 } from '@patternfly/react-core';
 import { BrowserRouter, Link } from 'react-router-dom';
 import { cloneDeep, filter, clone } from 'lodash';
@@ -155,19 +156,27 @@ const SCCProductView = ({ sccProducts, editProductTreeGlobal }) => {
       <CardTitle>{__('Subscribed SCC Products')}</CardTitle>
       {sccProducts.length > 0 && (
         <CardBody>
-          <Button variant="link" onClick={collapseAll}>
-            {__('Collapse all')}
-          </Button>
-          <Button variant="link" onClick={expandAll}>
-            {__('Expand all')}
-          </Button>
+          <Tile isSelected={allExpanded === undefined ? false : !allExpanded}>
+            <Button variant="link" onClick={collapseAll}>
+              {__('Collapse all')}
+            </Button>
+          </Tile>
+          <Tile isSelected={allExpanded === undefined ? false : allExpanded}>
+            <Button variant="link" onClick={expandAll}>
+              {__('Expand all')}
+            </Button>
+          </Tile>
 
-          <Button variant="link" onClick={showFullTree}>
-            {__('Show all')}
-          </Button>
-          <Button variant="link" onClick={showSubscribed}>
-            {__('Show subscribed only')}
-          </Button>
+          <Tile isSelected={showAll}>
+            <Button variant="link" onClick={showFullTree}>
+              {__('Show all')}
+            </Button>
+          </Tile>
+          <Tile isSelected={!showAll}>
+            <Button variant="link" onClick={showSubscribed}>
+              {__('Show subscribed only')}
+            </Button>
+          </Tile>
           <TreeView
             data={showAll ? allProducts : subscribedProducts}
             allExpanded={allExpanded}
