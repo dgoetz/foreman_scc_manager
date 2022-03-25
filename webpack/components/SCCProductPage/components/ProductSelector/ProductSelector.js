@@ -1,8 +1,16 @@
+import './ProductSelector.scss'
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import GenericSelector from './GenericSelector';
 import TreeSelector from './TreeSelector';
-import { Button, Card, CardTitle, CardBody } from '@patternfly/react-core';
+import {
+  Button,
+  Card,
+  CardTitle,
+  CardBody,
+  Flex,
+  FlexItem,
+} from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { uniq } from 'lodash';
 
@@ -87,46 +95,62 @@ const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
     <Card>
       <CardTitle>{__('SCC Product Selection')}</CardTitle>
       <CardBody>
-        <GenericSelector
-          key="prod-select"
-          selectionItems={productItems}
-          setGlobalSelected={onProductSelectionChange}
-          screenReaderLabel={__('Product selection')}
-          initialLabel={
-            selectedProduct === '' ? __('Select Product') : selectedProduct
-          }
-        />{' '}
-        <GenericSelector
-          key="vers-select"
-          selectionItems={versionItems}
-          setGlobalSelected={onVersionSelectionChange}
-          screenReaderLabel={__('Version selection')}
-          initialLabel={
-            selectedVersion === '' ? __('Select Version') : selectedVersion
-          }
-        />
-        <GenericSelector
-          key="arch-select"
-          selectionItems={archItems}
-          setGlobalSelected={onArchSelectionChange}
-          screenReaderLabel={__('Architecture selection')}
-          initialLabel={
-            selectedArch === '' ? __('Select Architecture') : selectedArch
-          }
-        />{' '}
-        <br />
-        <br />
-        <Button variant="primary" onClick={filterProducts}>
-          {__('Search')}
-        </Button>{' '}
-        <br />
-        <br />
-        {showSearchTree && (
-          <TreeSelector
-            sccProducts={filteredSccProducts}
-            sccAccountId={sccAccountId}
-          />
-        )}
+        <Flex direction={{ default: 'column' }}>
+          <Flex>
+            <FlexItem>
+              <GenericSelector
+                key="prod-select"
+                selectionItems={productItems}
+                setGlobalSelected={onProductSelectionChange}
+                screenReaderLabel={__('Product selection')}
+                initialLabel={
+                  selectedProduct === ''
+                    ? __('Select Product')
+                    : selectedProduct
+                }
+              />
+            </FlexItem>
+            <FlexItem>
+              <GenericSelector
+                key="vers-select"
+                selectionItems={versionItems}
+                setGlobalSelected={onVersionSelectionChange}
+                screenReaderLabel={__('Version selection')}
+                initialLabel={
+                  selectedVersion === ''
+                    ? __('Select Version')
+                    : selectedVersion
+                }
+              />
+            </FlexItem>
+            <FlexItem>
+              <GenericSelector
+                key="arch-select"
+                selectionItems={archItems}
+                setGlobalSelected={onArchSelectionChange}
+                screenReaderLabel={__('Architecture selection')}
+                initialLabel={
+                  selectedArch === '' ? __('Select Architecture') : selectedArch
+                }
+              />
+            </FlexItem>
+          </Flex>
+          <Flex>
+            <FlexItem>
+              <Button variant="primary" onClick={filterProducts}>
+                {__('Search')}
+              </Button>
+            </FlexItem>
+          </Flex>
+          <FlexItem>
+            {showSearchTree && (
+              <TreeSelector
+                sccProducts={filteredSccProducts}
+                sccAccountId={sccAccountId}
+              />
+            )}
+          </FlexItem>
+        </Flex>
       </CardBody>
     </Card>
   );

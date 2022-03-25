@@ -8,6 +8,8 @@ import {
   Tooltip,
   Switch,
   Tile,
+  Flex,
+  FlexItem,
 } from '@patternfly/react-core';
 import { cloneDeep, merge } from 'lodash';
 import RepoSelector from './RepoSelector';

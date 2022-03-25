@@ -12,6 +12,10 @@ import {
   CardBody,
   Tooltip,
   Tile,
+  Grid,
+  GridItem,
+  Flex,
+  FlexItem,
 } from '@patternfly/react-core';
 import { BrowserRouter, Link } from 'react-router-dom';
 import { cloneDeep, filter, clone } from 'lodash';
@@ -156,27 +160,44 @@ const SCCProductView = ({ sccProducts, editProductTreeGlobal }) => {
       <CardTitle>{__('Subscribed SCC Products')}</CardTitle>
       {sccProducts.length > 0 && (
         <CardBody>
-          <Tile isSelected={allExpanded === undefined ? false : !allExpanded}>
-            <Button variant="link" onClick={collapseAll}>
-              {__('Collapse all')}
-            </Button>
-          </Tile>
-          <Tile isSelected={allExpanded === undefined ? false : allExpanded}>
-            <Button variant="link" onClick={expandAll}>
-              {__('Expand all')}
-            </Button>
-          </Tile>
-
-          <Tile isSelected={showAll}>
-            <Button variant="link" onClick={showFullTree}>
-              {__('Show all')}
-            </Button>
-          </Tile>
-          <Tile isSelected={!showAll}>
-            <Button variant="link" onClick={showSubscribed}>
-              {__('Show subscribed only')}
-            </Button>
-          </Tile>
+          <Flex>
+            <Flex>
+              <FlexItem>
+                <Tile
+                  isSelected={allExpanded === undefined ? false : !allExpanded}
+                >
+                  <Button variant="link" onClick={collapseAll}>
+                    {__('Collapse all')}
+                  </Button>
+                </Tile>
+              </FlexItem>
+              <FlexItem>
+                <Tile
+                  isSelected={allExpanded === undefined ? false : allExpanded}
+                >
+                  <Button variant="link" onClick={expandAll}>
+                    {__('Expand all')}
+                  </Button>
+                </Tile>
+              </FlexItem>
+            </Flex>
+            <Flex>
+              <FlexItem>
+                <Tile isSelected={showAll}>
+                  <Button variant="link" onClick={showFullTree}>
+                    {__('Show all')}
+                  </Button>
+                </Tile>
+              </FlexItem>
+              <FlexItem>
+                <Tile isSelected={!showAll}>
+                  <Button variant="link" onClick={showSubscribed}>
+                    {__('Show subscribed only')}
+                  </Button>
+                </Tile>
+              </FlexItem>
+            </Flex>
+          </Flex>
           <TreeView
             data={showAll ? allProducts : subscribedProducts}
             allExpanded={allExpanded}

@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { Button } from '@patternfly/react-core';
+import { Button, Stack, StackItem } from '@patternfly/react-core';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import { PlusIcon } from '@patternfly/react-icons';
 import SCCProductView from './components/SCCProductView/SCCProductView';
 import EmptySccProducts from './EmptySccProducts';
 import ProductSelector from './components/ProductSelector/ProductSelector';
 
-const SCCProductPage = ({ canCreate, sccAccountId, sccProductsInit, ...props }) => {
+const SCCProductPage = ({
+  canCreate,
+  sccAccountId,
+  sccProductsInit,
+  ...props
+}) => {
   const dispatch = useDispatch();
   const [selectOpen, setSelectOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState(0);
@@ -24,24 +29,34 @@ const SCCProductPage = ({ canCreate, sccAccountId, sccProductsInit, ...props }) 
   };
 
   return sccProductsInit.length > 0 ? (
-    <>
-      <SCCProductView
-        sccProducts={sccProductsInit.filter((prod) => prod.product_id !== null)}
-        editProductTreeGlobal={editProductTree}
-      />
-      <br />
-      <Button variant="link" icon={<PlusIcon />} onClick={openProductSelection}>
-        {__('Add new SUSE products')}
-      </Button>
-      <br />
-      {selectOpen && (
-        <ProductSelector
-          sccProducts={sccProductsInit}
-          sccAccountId={sccAccountId}
-          editProductId={productToEdit}
+    <Stack>
+      <StackItem>
+        <SCCProductView
+          sccProducts={sccProductsInit.filter(
+            (prod) => prod.product_id !== null
+          )}
+          editProductTreeGlobal={editProductTree}
         />
-      )}
-    </>
+      </StackItem>
+      <StackItem isFilled>
+        <Button
+          variant="link"
+          icon={<PlusIcon />}
+          onClick={openProductSelection}
+        >
+          {__('Add new SUSE products')}
+        </Button>
+      </StackItem>
+      <StackItem>
+        {selectOpen && (
+          <ProductSelector
+            sccProducts={sccProductsInit}
+            sccAccountId={sccAccountId}
+            editProductId={productToEdit}
+          />
+        )}
+      </StackItem>
+    </Stack>
   ) : (
     <EmptySccProducts sccAccountId={sccAccountId} canCreate={canCreate} />
   );
