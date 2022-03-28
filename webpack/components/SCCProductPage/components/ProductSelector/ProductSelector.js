@@ -1,4 +1,4 @@
-import './ProductSelector.scss'
+import './ProductSelector.scss';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import GenericSelector from './GenericSelector';

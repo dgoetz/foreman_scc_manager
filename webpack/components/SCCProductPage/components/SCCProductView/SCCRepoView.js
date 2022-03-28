@@ -1,3 +1,5 @@
+import './SCCRepoView.scss';
+
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -76,7 +78,7 @@ const SCCRepoView = ({ sccRepos, sccProductId }) => {
       toggle={
         <BadgeToggle id="toggle-id" onToggle={onToggle}>
           {sprintf(
-            __('Show repositories (%s/%s)'),
+            __('Repositories (%s/%s)'),
             sccRepos.filter((r) => r.katello_root_repository_id !== null)
               .length,
             sccRepos.length
