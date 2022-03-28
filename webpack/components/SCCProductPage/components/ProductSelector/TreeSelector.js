@@ -7,13 +7,15 @@ import {
   Button,
   Tooltip,
   Switch,
-  Tile,
   Flex,
   FlexItem,
+  Card,
+  CardBody,
 } from '@patternfly/react-core';
 import { cloneDeep, merge } from 'lodash';
 import RepoSelector from './RepoSelector';
 import { subscribeProductsWithReposAction } from '../../SCCProductPageActions';
+import ProductTreeExpander from '../common/ProductTreeExpander';
 
 const addCheckBoxToTree = (tree) => {
   const checkProps = {};
@@ -136,7 +138,7 @@ const TreeSelector = ({ sccProducts, sccAccountId }) => {
   const dispatch = useDispatch();
   // this needs to be uninitialized such that the first call to setAllExpanded can actually
   // change the value of allExpanded
-  const [allExpanded, setAllExpanded] = useState();
+  const [expandAll, setExpandAll] = useState();
   const [selectedRepos, setSelectedRepos] = useState({});
   const [activateDebugFilter, setActivateDebugFilter] = useState(true);
 
@@ -173,12 +175,8 @@ const TreeSelector = ({ sccProducts, sccAccountId }) => {
     );
   }, [sccProducts, activateDebugFilter]);
 
-  const collapseAll = (evt) => {
-    setAllExpanded(false);
-  };
-
-  const expandAll = (evt) => {
-    setAllExpanded(true);
+  const setExpandAllFromChild = (expandAllFromChild) => {
+    setExpandAll(expandAllFromChild);
   };
 
   const debugFilterChange = (evt) => {
@@ -226,33 +224,11 @@ const TreeSelector = ({ sccProducts, sccAccountId }) => {
   };
 
   return (
-    <>
-      <Flex direction={{ default: 'column' }}>
-        <Flex>
+    <Card>
+      <CardBody>
+        <Flex direction={{ default: 'column' }}>
           <Flex>
-            <FlexItem>
-              <Tile
-                isSelected={allExpanded === undefined ? false : !allExpanded}
-              >
-                <Button variant="link" onClick={collapseAll}>
-                  {__('Collapse all')}
-                </Button>
-              </Tile>
-            </FlexItem>
-            <FlexItem>
-              <Tile
-                isSelected={allExpanded === undefined ? false : allExpanded}
-              >
-                <Button variant="link" onClick={expandAll}>
-                  {__('Expand all')}
-                </Button>
-              </Tile>
-            </FlexItem>
-          </Flex>
-          <Flex
-            alignContent={{ default: 'alignContentSpaceAround' }}
-            alignSelf={{ default: 'alignSelfCenter' }}
-          >
+            <ProductTreeExpander setExpandAllInParent={setExpandAllFromChild} />
             <FlexItem>
               <Switch
                 id="filter-debug-switch"
@@ -262,24 +238,24 @@ const TreeSelector = ({ sccProducts, sccAccountId }) => {
               />
             </FlexItem>
           </Flex>
+          <Flex>
+            <TreeView
+              data={sccProductTree}
+              allExpanded={expandAll}
+              onCheck={onCheck}
+              hasChecks
+              hasBadges
+              hasGuides
+            />
+          </Flex>
+          <Flex>
+            <Button variant="primary" onClick={submitForm}>
+              {__('Add product(s)')}
+            </Button>
+          </Flex>
         </Flex>
-        <Flex>
-          <TreeView
-            data={sccProductTree}
-            allExpanded={allExpanded}
-            onCheck={onCheck}
-            hasChecks
-            hasBadges
-            hasGuides
-          />
-        </Flex>
-        <Flex>
-          <Button variant="primary" onClick={submitForm}>
-            {__('Add product(s)')}
-          </Button>
-        </Flex>
-      </Flex>
-    </>
+      </CardBody>
+    </Card>
   );
 };
 

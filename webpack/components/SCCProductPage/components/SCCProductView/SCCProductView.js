@@ -11,14 +11,13 @@ import {
   CardTitle,
   CardBody,
   Tooltip,
-  Tile,
-  Grid,
-  GridItem,
   Flex,
   FlexItem,
 } from '@patternfly/react-core';
 import { BrowserRouter, Link } from 'react-router-dom';
 import { cloneDeep, filter, clone } from 'lodash';
+import ProductTreeExpander from '../common/ProductTreeExpander';
+import SubscribedProductsExpander from '../common/SubscribedProductsExpander';
 
 const addCheckBoxToTree = (tree) => {
   const checkProps = {};
@@ -74,13 +73,11 @@ const addReposToTree = (tree) => {
 
 const addValidationStatusToTree = (tree) => {
   tree.customBadgeContent.push(
-    <>
-      <Tooltip content={__('Please check your SUSE subscription')}>
-        <Button variant="plain">
-          <Icon name="warning-triangle-o" type="pf" size="2x" />
-        </Button>
-      </Tooltip>
-    </>
+    <Tooltip content={__('Please check your SUSE subscription')}>
+      <Button variant="plain">
+        <Icon name="warning-triangle-o" type="pf" size="2x" />
+      </Button>
+    </Tooltip>
   );
   return tree;
 };
@@ -125,7 +122,6 @@ const SCCProductView = ({ sccProducts, editProductTreeGlobal }) => {
     editProductTreeGlobal(productId);
   };
   const sccProductsClone = cloneDeep(sccProducts);
-  const [allExpanded, setAllExpanded] = useState();
   // wrap actual iterator function into anonymous function to pass extra parameters
   const [allProducts, setAllProducts] = useState(
     sccProductsClone.map((tree) =>
@@ -134,25 +130,24 @@ const SCCProductView = ({ sccProducts, editProductTreeGlobal }) => {
   );
   const [subscribedProducts, setSubscribedProducts] = useState(null);
   const [showAll, setShowAll] = useState(true);
+  const [expandAll, setExpandAll] = useState();
 
-  const collapseAll = (evt) => {
-    setAllExpanded(false);
-  };
-
-  const expandAll = (evt) => {
-    setAllExpanded(true);
-  };
-
-  const showFullTree = (evt) => {
-    setShowAll(true);
-  };
-
-  const showSubscribed = (evt) => {
-    setShowAll(false);
+  const showSubscribed = () => {
     if (subscribedProducts === null) {
       const test = allProducts.map(filterDeep);
       setSubscribedProducts(test);
     }
+  };
+
+  const setShowAllFromChild = (showAllFromChild) => {
+    if (!showAllFromChild) {
+      showSubscribed();
+    }
+    setShowAll(showAllFromChild);
+  };
+
+  const setExpandAllFromChild = (expandAllFromChild) => {
+    setExpandAll(expandAllFromChild);
   };
 
   return (
@@ -161,46 +156,14 @@ const SCCProductView = ({ sccProducts, editProductTreeGlobal }) => {
       {sccProducts.length > 0 && (
         <CardBody>
           <Flex>
-            <Flex>
-              <FlexItem>
-                <Tile
-                  isSelected={allExpanded === undefined ? false : !allExpanded}
-                >
-                  <Button variant="link" onClick={collapseAll}>
-                    {__('Collapse all')}
-                  </Button>
-                </Tile>
-              </FlexItem>
-              <FlexItem>
-                <Tile
-                  isSelected={allExpanded === undefined ? false : allExpanded}
-                >
-                  <Button variant="link" onClick={expandAll}>
-                    {__('Expand all')}
-                  </Button>
-                </Tile>
-              </FlexItem>
-            </Flex>
-            <Flex>
-              <FlexItem>
-                <Tile isSelected={showAll}>
-                  <Button variant="link" onClick={showFullTree}>
-                    {__('Show all')}
-                  </Button>
-                </Tile>
-              </FlexItem>
-              <FlexItem>
-                <Tile isSelected={!showAll}>
-                  <Button variant="link" onClick={showSubscribed}>
-                    {__('Show subscribed only')}
-                  </Button>
-                </Tile>
-              </FlexItem>
-            </Flex>
+            <ProductTreeExpander setExpandAllInParent={setExpandAllFromChild} />
+            <SubscribedProductsExpander
+              setExpandAllInParent={setShowAllFromChild}
+            />
           </Flex>
           <TreeView
             data={showAll ? allProducts : subscribedProducts}
-            allExpanded={allExpanded}
+            allExpanded={expandAll}
             hasChecks
             hasBadges
             hasGuides
