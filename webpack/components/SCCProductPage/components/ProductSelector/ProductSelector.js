@@ -134,8 +134,6 @@ const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
                 }
               />
             </FlexItem>
-          </Flex>
-          <Flex>
             <FlexItem>
               <Button variant="primary" onClick={filterProducts}>
                 {__('Search')}
