@@ -80,33 +80,23 @@ const setupTreeViewListItem = (
   return tree;
 };
 
-const toggleRepoSelection = (
+const checkAllParents = (
   tree,
-  disableRepos,
   activateDebugFilter,
   setSelectedReposFromChild
 ) => {
-  addRepoSelectorToTree(
-    tree,
-    disableRepos,
-    activateDebugFilter,
-    setSelectedReposFromChild
-  );
-
-  if (disableRepos) {
-    if ('children' in tree)
-      tree.children.map((p) =>
-        toggleRepoSelection(
-          p,
-          disableRepos,
-          activateDebugFilter,
-          setSelectedReposFromChild
-        )
-      );
-  } else if (tree.parent)
-    toggleRepoSelection(
+  if (!tree.checkProps.checked) {
+    tree.checkProps.checked = true;
+    addRepoSelectorToTree(
+      tree,
+      false,
+      activateDebugFilter,
+      setSelectedReposFromChild
+    );
+  }
+  if (tree.parent)
+    checkAllParents(
       tree.parent,
-      disableRepos,
       activateDebugFilter,
       setSelectedReposFromChild
     );
@@ -114,22 +104,30 @@ const toggleRepoSelection = (
   return tree;
 };
 
-const checkAllParents = (tree) => {
-  tree.checkProps.checked = true;
-  if (tree.parent) checkAllParents(tree.parent);
+const uncheckAllChildren = (
+  tree,
+  activateDebugFilter,
+  setSelectedReposFromChild
+) => {
+  if (tree.product_id === null) {
+    tree.checkProps.checked = false;
+    addRepoSelectorToTree(
+      tree,
+      true,
+      activateDebugFilter,
+      setSelectedReposFromChild
+    );
+  }
+  if ('children' in tree)
+    tree.children = tree.children.map((c) =>
+      uncheckAllChildren(c, activateDebugFilter, setSelectedReposFromChild)
+    );
 
   return tree;
 };
 
 const getRootParent = (tree) => {
   if (tree.parent) return getRootParent(tree.parent);
-
-  return tree;
-};
-
-const uncheckAllChildren = (tree) => {
-  if (tree.product_id === null) tree.checkProps.checked = false;
-  if ('children' in tree) tree.children = tree.children.map(uncheckAllChildren);
 
   return tree;
 };
@@ -173,7 +171,7 @@ const TreeSelector = ({ sccProducts, sccAccountId }) => {
         )
       )
     );
-  }, [sccProducts, activateDebugFilter]);
+  }, [sccProducts]);
 
   const setExpandAllFromChild = (expandAllFromChild) => {
     setExpandAll(expandAllFromChild);
@@ -181,30 +179,22 @@ const TreeSelector = ({ sccProducts, sccAccountId }) => {
 
   const debugFilterChange = (evt) => {
     setActivateDebugFilter(!activateDebugFilter);
-
-    sccProductTree.map((p) =>
-      toggleRepoSelection(
-        p,
-        p.checkProps.checked || p.product_id !== null,
-        !activateDebugFilter,
-        setSelectedReposFromChild
-      )
-    );
   };
 
   const onCheck = (evt, treeViewItem) => {
     if (evt.target.checked) {
-      checkAllParents(treeViewItem);
+      checkAllParents(
+        treeViewItem,
+        activateDebugFilter,
+        setSelectedReposFromChild
+      );
     } else {
-      uncheckAllChildren(treeViewItem);
+      uncheckAllChildren(
+        treeViewItem,
+        activateDebugFilter,
+        setSelectedReposFromChild
+      );
     }
-
-    toggleRepoSelection(
-      treeViewItem,
-      !evt.target.checked,
-      activateDebugFilter,
-      setSelectedReposFromChild
-    );
 
     setSccProductTree([...merge(sccProductTree, getRootParent(treeViewItem))]);
   };
@@ -234,7 +224,7 @@ const TreeSelector = ({ sccProducts, sccAccountId }) => {
                 id="filter-debug-switch"
                 onChange={debugFilterChange}
                 isChecked={activateDebugFilter}
-                label={__('Filter Debug and Source Pool packages')}
+                label={__('Filter Debug and Source Pool repositories')}
               />
             </FlexItem>
           </Flex>
