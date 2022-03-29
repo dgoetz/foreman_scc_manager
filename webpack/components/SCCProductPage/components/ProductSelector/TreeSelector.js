@@ -223,12 +223,18 @@ const TreeSelector = ({ sccProducts, sccAccountId, resetFormFromParent }) => {
           <Flex>
             <ProductTreeExpander setExpandAllInParent={setExpandAllFromChild} />
             <FlexItem>
-              <Switch
-                id="filter-debug-switch"
-                onChange={debugFilterChange}
-                isChecked={activateDebugFilter}
-                label={__('Filter Debug and Source Pool repositories')}
-              />
+              <Tooltip
+                content={__(
+                  'This option allows you to automatically filter debug and source pool repositories on product selection. It only applies for unselected products. Already selected products are not filtered.'
+                )}
+              >
+                <Switch
+                  id="filter-debug-switch"
+                  onChange={debugFilterChange}
+                  isChecked={activateDebugFilter}
+                  label={__('Filter Debug and Source Pool repositories')}
+                />
+              </Tooltip>
             </FlexItem>
           </Flex>
           <Flex>
