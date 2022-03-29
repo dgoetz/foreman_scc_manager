@@ -91,6 +91,13 @@ const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
     );
   };
 
+  const resetTreeForm = () => {
+    setShowSearchTree(false);
+    setSelectedProduct('');
+    setSelectedVersion('');
+    setSelectedArch('');
+  };
+
   return (
     <Card>
       <CardTitle>{__('SCC Product Selection')}</CardTitle>
@@ -145,6 +152,7 @@ const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
               <TreeSelector
                 sccProducts={filteredSccProducts}
                 sccAccountId={sccAccountId}
+                resetFormFromParent={resetTreeForm}
               />
             )}
           </FlexItem>

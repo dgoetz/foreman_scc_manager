@@ -132,7 +132,7 @@ const getRootParent = (tree) => {
   return tree;
 };
 
-const TreeSelector = ({ sccProducts, sccAccountId }) => {
+const TreeSelector = ({ sccProducts, sccAccountId, resetFormFromParent }) => {
   const dispatch = useDispatch();
   // this needs to be uninitialized such that the first call to setAllExpanded can actually
   // change the value of allExpanded
@@ -211,6 +211,9 @@ const TreeSelector = ({ sccProducts, sccAccountId }) => {
     dispatch(
       subscribeProductsWithReposAction(sccAccountId, productsToSubscribe)
     );
+    // reset data structure and form
+    setSelectedRepos({});
+    resetFormFromParent();
   };
 
   return (
@@ -252,6 +255,7 @@ const TreeSelector = ({ sccProducts, sccAccountId }) => {
 TreeSelector.propTypes = {
   sccProducts: PropTypes.array,
   sccAccountId: PropTypes.number.isRequired,
+  resetFormFromParent: PropTypes.func.isRequired,
 };
 
 TreeSelector.defaultProps = {
