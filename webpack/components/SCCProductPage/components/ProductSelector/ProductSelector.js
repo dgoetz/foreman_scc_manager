@@ -14,9 +14,16 @@ import {
 import { translate as __ } from 'foremanReact/common/I18n';
 import { uniq } from 'lodash';
 
+const resetSelectionStringProduct = __(' -- Select Product --');
+const resetSelectionStringVersion = __(' -- Select Version --');
+const resetSelectionStringArch = __(' -- Select Architecture --');
+
 const genericFilter = (object, comparator) =>
   // we can have architectures that are not set
   comparator === '' ||
+  comparator === resetSelectionStringProduct ||
+  comparator === resetSelectionStringVersion ||
+  comparator === resetSelectionStringArch ||
   object === comparator ||
   (object === null && comparator === 'no arch');
 
@@ -61,18 +68,27 @@ const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
   }, [editProductId, sccProducts]);
 
   const onProductSelectionChange = (value) => {
+    if (value !== resetSelectionStringProduct) {
+      setVersionItems(filterVersionByProduct(sccProducts, value));
+    } else {
+      setVersionItems([]);
+    }
     setSelectedProduct(value);
-    setVersionItems(filterVersionByProduct(sccProducts, value));
     setArchItems([]);
     setSelectedVersion('');
     setSelectedArch('');
   };
 
   const onVersionSelectionChange = (value) => {
+    if (value === resetSelectionStringVersion) {
+      setArchItems([]);
+    } else {
+      setArchItems(
+        filterArchByVersionAndProduct(sccProducts, selectedProduct, value)
+      );
+    }
     setSelectedVersion(value);
-    setArchItems(
-      filterArchByVersionAndProduct(sccProducts, selectedProduct, value)
-    );
+    setSelectedArch('');
   };
 
   const onArchSelectionChange = (value) => {
@@ -107,12 +123,16 @@ const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
             <FlexItem>
               <GenericSelector
                 key="prod-select"
-                selectionItems={productItems}
+                selectionItems={
+                  selectedProduct === ''
+                    ? productItems
+                    : [resetSelectionStringProduct].concat(productItems)
+                }
                 setGlobalSelected={onProductSelectionChange}
-                screenReaderLabel={__('Product selection')}
+                screenReaderLabel={resetSelectionStringProduct}
                 initialLabel={
                   selectedProduct === ''
-                    ? __('Select Product')
+                    ? resetSelectionStringProduct
                     : selectedProduct
                 }
               />
@@ -120,12 +140,16 @@ const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
             <FlexItem>
               <GenericSelector
                 key="vers-select"
-                selectionItems={versionItems}
+                selectionItems={
+                  selectedVersion === ''
+                    ? versionItems
+                    : [resetSelectionStringVersion].concat(versionItems)
+                }
                 setGlobalSelected={onVersionSelectionChange}
-                screenReaderLabel={__('Version selection')}
+                screenReaderLabel={resetSelectionStringVersion}
                 initialLabel={
                   selectedVersion === ''
-                    ? __('Select Version')
+                    ? resetSelectionStringVersion
                     : selectedVersion
                 }
               />
@@ -133,11 +157,15 @@ const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
             <FlexItem>
               <GenericSelector
                 key="arch-select"
-                selectionItems={archItems}
+                selectionItems={
+                  selectedArch === ''
+                    ? archItems
+                    : [resetSelectionStringArch].concat(archItems)
+                }
                 setGlobalSelected={onArchSelectionChange}
-                screenReaderLabel={__('Architecture selection')}
+                screenReaderLabel={resetSelectionStringArch}
                 initialLabel={
-                  selectedArch === '' ? __('Select Architecture') : selectedArch
+                  selectedArch === '' ? resetSelectionStringArch : selectedArch
                 }
               />
             </FlexItem>
