@@ -20,7 +20,9 @@ const createKatelloRepoLink = (repo, sccProductId) => {
   return (
     <Tooltip content={__('Go to Repository page')}>
       <BrowserRouter>
-        <Link to={url}>{repo.name}</Link>
+        <Link to={url} target="_blank">
+          {repo.name}
+        </Link>
       </BrowserRouter>
     </Tooltip>
   );

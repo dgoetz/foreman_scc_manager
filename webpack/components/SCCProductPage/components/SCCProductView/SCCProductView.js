@@ -31,7 +31,7 @@ const addKatelloLinkToTree = (tree) => {
   // Link component needs to be wrapped in a Router
   tree.customBadgeContent.push(
     <BrowserRouter>
-      <Link to={url}>
+      <Link to={url} target="_blank">
         <Tooltip content={__('Go to Product page')}>
           <Button variant="plain" id="tt-ref">
             <Icon name="external-link" type="fa" />
