@@ -20,6 +20,10 @@ const setRepoSelection = (
   productAlreadySynced
 ) => {
   let res = [];
+  // this is necessary because the logic of this option was inverted
+  // Instead of filtering the debug repositories with the corresponding option,
+  // this option now includes the repositories, instead - means, it does exactly the opposite.
+  activateDebugFilter = !activateDebugFilter;
   if (!disableRepos && !productAlreadySynced) {
     if (activateDebugFilter) {
       res = sccRepos.filter(

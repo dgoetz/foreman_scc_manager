@@ -138,7 +138,8 @@ const TreeSelector = ({ sccProducts, sccAccountId, resetFormFromParent }) => {
   // change the value of allExpanded
   const [expandAll, setExpandAll] = useState();
   const [selectedRepos, setSelectedRepos] = useState({});
-  const [activateDebugFilter, setActivateDebugFilter] = useState(true);
+  // the debug filter is actually a 'includeDebugRepos' setting which should not be active by default
+  const [activateDebugFilter, setActivateDebugFilter] = useState(false);
 
   const setSelectedReposFromChild = (sccProductId, repoArray) => {
     if (repoArray.length !== 0) {
@@ -225,14 +226,14 @@ const TreeSelector = ({ sccProducts, sccAccountId, resetFormFromParent }) => {
             <FlexItem>
               <Tooltip
                 content={__(
-                  'This option allows you to automatically filter debug and source pool repositories on product selection. It only applies for unselected products. Already selected products are not filtered.'
+                  'If this option is enabled, debug and source pool repositories are automatically selected if you select a product. This option is disabled by default. It applies for unselected products, only. Already selected products are not filtered.'
                 )}
               >
                 <Switch
                   id="filter-debug-switch"
                   onChange={debugFilterChange}
                   isChecked={activateDebugFilter}
-                  label={__('Filter Debug and Source Pool repositories')}
+                  label={__('Include Debug and Source Pool repositories')}
                 />
               </Tooltip>
             </FlexItem>
