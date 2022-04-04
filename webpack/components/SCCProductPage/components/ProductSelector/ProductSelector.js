@@ -3,11 +3,14 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import GenericSelector from './GenericSelector';
 import TreeSelector from './TreeSelector';
+import { TimesIcon } from '@patternfly/react-icons';
 import {
   Button,
   Card,
   CardTitle,
   CardBody,
+  CardHeader,
+  CardExpandableContent,
   Flex,
   FlexItem,
 } from '@patternfly/react-core';
@@ -52,6 +55,7 @@ const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
   const [selectedVersion, setSelectedVersion] = useState('');
   const [filteredSccProducts, setFilteredSccProducts] = useState([]);
   const [showSearchTree, setShowSearchTree] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     if (editProductId !== 0) {
@@ -63,6 +67,7 @@ const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
         setSelectedVersion(product[0].version);
         setFilteredSccProducts(product);
         setShowSearchTree(true);
+        setIsExpanded(true);
       }
     }
   }, [editProductId, sccProducts]);
@@ -95,6 +100,10 @@ const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
     setSelectedArch(value);
   };
 
+  const onExpand = (evt, id) => {
+    setIsExpanded(!isExpanded);
+  };
+
   const filterProducts = (evt) => {
     setShowSearchTree(true);
     setFilteredSccProducts(
@@ -115,77 +124,92 @@ const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
   };
 
   return (
-    <Card>
-      <CardTitle>{__('SCC Product Selection')}</CardTitle>
-      <CardBody>
-        <Flex direction={{ default: 'column' }}>
-          <Flex>
+    <Card border="dark" id="product-selection-card" isExpanded={isExpanded}>
+      <CardHeader onExpand={onExpand}>
+        <CardTitle>{__('Add new SUSE products')}</CardTitle>
+      </CardHeader>
+      <CardExpandableContent>
+        <CardBody>
+          <Flex direction={{ default: 'column' }}>
+            <Flex>
+              <FlexItem>
+                <GenericSelector
+                  key="prod-select"
+                  selectionItems={
+                    selectedProduct === ''
+                      ? productItems
+                      : [resetSelectionStringProduct].concat(productItems)
+                  }
+                  setGlobalSelected={onProductSelectionChange}
+                  screenReaderLabel={resetSelectionStringProduct}
+                  initialLabel={
+                    selectedProduct === ''
+                      ? resetSelectionStringProduct
+                      : selectedProduct
+                  }
+                />
+              </FlexItem>
+              <FlexItem>
+                <GenericSelector
+                  key="vers-select"
+                  selectionItems={
+                    selectedVersion === ''
+                      ? versionItems
+                      : [resetSelectionStringVersion].concat(versionItems)
+                  }
+                  setGlobalSelected={onVersionSelectionChange}
+                  screenReaderLabel={resetSelectionStringVersion}
+                  initialLabel={
+                    selectedVersion === ''
+                      ? resetSelectionStringVersion
+                      : selectedVersion
+                  }
+                />
+              </FlexItem>
+              <FlexItem>
+                <GenericSelector
+                  key="arch-select"
+                  selectionItems={
+                    selectedArch === ''
+                      ? archItems
+                      : [resetSelectionStringArch].concat(archItems)
+                  }
+                  setGlobalSelected={onArchSelectionChange}
+                  screenReaderLabel={resetSelectionStringArch}
+                  initialLabel={
+                    selectedArch === ''
+                      ? resetSelectionStringArch
+                      : selectedArch
+                  }
+                />
+              </FlexItem>
+              <FlexItem>
+                <Button variant="primary" onClick={filterProducts}>
+                  {__('Search')}
+                </Button>
+              </FlexItem>
+              <FlexItem>
+                <Button
+                  variant="link"
+                  icon={<TimesIcon />}
+                  onClick={resetTreeForm}
+                >
+                  {__('Reset Selection')}
+                </Button>
+              </FlexItem>
+            </Flex>
             <FlexItem>
-              <GenericSelector
-                key="prod-select"
-                selectionItems={
-                  selectedProduct === ''
-                    ? productItems
-                    : [resetSelectionStringProduct].concat(productItems)
-                }
-                setGlobalSelected={onProductSelectionChange}
-                screenReaderLabel={resetSelectionStringProduct}
-                initialLabel={
-                  selectedProduct === ''
-                    ? resetSelectionStringProduct
-                    : selectedProduct
-                }
-              />
-            </FlexItem>
-            <FlexItem>
-              <GenericSelector
-                key="vers-select"
-                selectionItems={
-                  selectedVersion === ''
-                    ? versionItems
-                    : [resetSelectionStringVersion].concat(versionItems)
-                }
-                setGlobalSelected={onVersionSelectionChange}
-                screenReaderLabel={resetSelectionStringVersion}
-                initialLabel={
-                  selectedVersion === ''
-                    ? resetSelectionStringVersion
-                    : selectedVersion
-                }
-              />
-            </FlexItem>
-            <FlexItem>
-              <GenericSelector
-                key="arch-select"
-                selectionItems={
-                  selectedArch === ''
-                    ? archItems
-                    : [resetSelectionStringArch].concat(archItems)
-                }
-                setGlobalSelected={onArchSelectionChange}
-                screenReaderLabel={resetSelectionStringArch}
-                initialLabel={
-                  selectedArch === '' ? resetSelectionStringArch : selectedArch
-                }
-              />
-            </FlexItem>
-            <FlexItem>
-              <Button variant="primary" onClick={filterProducts}>
-                {__('Search')}
-              </Button>
+              {showSearchTree && (
+                <TreeSelector
+                  sccProducts={filteredSccProducts}
+                  sccAccountId={sccAccountId}
+                  resetFormFromParent={resetTreeForm}
+                />
+              )}
             </FlexItem>
           </Flex>
-          <FlexItem>
-            {showSearchTree && (
-              <TreeSelector
-                sccProducts={filteredSccProducts}
-                sccAccountId={sccAccountId}
-                resetFormFromParent={resetTreeForm}
-              />
-            )}
-          </FlexItem>
-        </Flex>
-      </CardBody>
+        </CardBody>
+      </CardExpandableContent>
     </Card>
   );
 };
