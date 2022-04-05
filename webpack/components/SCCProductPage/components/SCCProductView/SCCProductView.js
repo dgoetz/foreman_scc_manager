@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Icon } from 'patternfly-react';
 import PropTypes from 'prop-types';
 import SCCRepoView from './SCCRepoView';
-import { translate as __ } from 'foremanReact/common/I18n';
+import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import { foremanUrl } from 'foremanReact/common/helpers';
 import {
   TreeView,
@@ -117,7 +117,11 @@ const filterDeep = (tree) => {
   return null;
 };
 
-const SCCProductView = ({ sccProducts, editProductTreeGlobal }) => {
+const SCCProductView = ({
+  sccProducts,
+  editProductTreeGlobal,
+  subscriptionTaskId,
+}) => {
   const editProductTree = (evt, productId) => {
     editProductTreeGlobal(productId);
   };
@@ -161,13 +165,34 @@ const SCCProductView = ({ sccProducts, editProductTreeGlobal }) => {
               setExpandAllInParent={setShowAllFromChild}
             />
           </Flex>
-          <TreeView
-            data={showAll ? allProducts : subscribedProducts}
-            allExpanded={expandAll}
-            hasChecks
-            hasBadges
-            hasGuides
-          />
+          <Flex>
+            <TreeView
+              data={showAll ? allProducts : subscribedProducts}
+              allExpanded={expandAll}
+              hasChecks
+              hasBadges
+              hasGuides
+            />
+          </Flex>
+          {subscriptionTaskId !== '' && (
+            <Flex>
+              <FlexItem>
+                <Button variant="link">
+                  <BrowserRouter>
+                    <Link
+                      to={sprintf(
+                        '/foreman_tasks/tasks/%s',
+                        subscriptionTaskId
+                      )}
+                      target="_blank"
+                    >
+                      {__('Show last product subscription task')}
+                    </Link>
+                  </BrowserRouter>
+                </Button>
+              </FlexItem>
+            </Flex>
+          )}
         </CardBody>
       )}
       {sccProducts.length === 0 && (
@@ -184,11 +209,13 @@ const SCCProductView = ({ sccProducts, editProductTreeGlobal }) => {
 SCCProductView.propTypes = {
   sccProducts: PropTypes.array,
   editProductTreeGlobal: PropTypes.func,
+  subscriptionTaskId: PropTypes.string,
 };
 
 SCCProductView.defaultProps = {
   sccProducts: undefined,
   editProductTreeGlobal: undefined,
+  subscriptionTaskId: '',
 };
 
 export default SCCProductView;

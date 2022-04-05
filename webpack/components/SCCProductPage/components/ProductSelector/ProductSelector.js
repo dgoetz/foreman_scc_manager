@@ -44,7 +44,12 @@ const filterArchByVersionAndProduct = (sccProducts, product, version) =>
       .map((i) => i.arch)
   ).sort();
 
-const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
+const ProductSelector = ({
+  sccProducts,
+  sccAccountId,
+  editProductId,
+  handleSubscribeCallback,
+}) => {
   const [productItems, setProductItems] = useState(
     uniq(sccProducts.map((p) => p.product_category))
   );
@@ -204,6 +209,7 @@ const ProductSelector = ({ sccProducts, sccAccountId, editProductId }) => {
                   sccProducts={filteredSccProducts}
                   sccAccountId={sccAccountId}
                   resetFormFromParent={resetTreeForm}
+                  handleSubscribeCallback={handleSubscribeCallback}
                 />
               )}
             </FlexItem>
@@ -218,6 +224,7 @@ ProductSelector.propTypes = {
   sccProducts: PropTypes.array,
   sccAccountId: PropTypes.number.isRequired,
   editProductId: PropTypes.number,
+  handleSubscribeCallback: PropTypes.func.isRequired,
 };
 
 ProductSelector.defaultProps = {

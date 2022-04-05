@@ -18,6 +18,7 @@ const SCCProductPage = ({
 }) => {
   const dispatch = useDispatch();
   const [productToEdit, setProductToEdit] = useState(0);
+  const [subscriptionTaskId, setSubscriptionTaskId] = useState();
   const openProductSelection = (evt) => {
     setSelectOpen(true);
   };
@@ -29,6 +30,10 @@ const SCCProductPage = ({
     }
   };
 
+  const handleSubscribeCallback = (subscriptionTaskId) => {
+    setSubscriptionTaskId(subscriptionTaskId);
+  };
+
   return sccProductsInit.length > 0 ? (
     <Stack>
       <StackItem>
@@ -36,6 +41,7 @@ const SCCProductPage = ({
           sccProducts={sccProductsInit.filter(
             (prod) => prod.product_id !== null
           )}
+          subscriptionTaskId={subscriptionTaskId}
           editProductTreeGlobal={editProductTree}
         />
       </StackItem>
@@ -46,6 +52,7 @@ const SCCProductPage = ({
           sccProducts={sccProductsInit}
           sccAccountId={sccAccountId}
           editProductId={productToEdit}
+          handleSubscribeCallback={handleSubscribeCallback}
         />
       </StackItem>
     </Stack>
