@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
-import { Button, Stack, StackItem } from '@patternfly/react-core';
-import { sprintf, translate as __ } from 'foremanReact/common/I18n';
-import { TimesCircleIcon } from '@patternfly/react-icons';
+import { Stack, StackItem } from '@patternfly/react-core';
 import SCCProductView from './components/SCCProductView/SCCProductView';
 import EmptySccProducts from './EmptySccProducts';
 import ProductSelector from './components/ProductSelector/ProductSelector';
@@ -15,22 +12,15 @@ const SCCProductPage = ({
   sccProductsInit,
   ...props
 }) => {
-  const dispatch = useDispatch();
   const [productToEdit, setProductToEdit] = useState(0);
   const [subscriptionTaskId, setSubscriptionTaskId] = useState();
-  const openProductSelection = (evt) => {
-    setSelectOpen(true);
-  };
 
   const editProductTree = (productId) => {
     setProductToEdit(productId);
-    if (productId !== 0) {
-      setSelectOpen(true);
-    }
   };
 
-  const handleSubscribeCallback = (subscriptionTaskId) => {
-    setSubscriptionTaskId(subscriptionTaskId);
+  const handleSubscribeCallback = (subscriptionTaskIdFromChild) => {
+    setSubscriptionTaskId(subscriptionTaskIdFromChild);
   };
 
   return sccProductsInit.length > 0 ? (
@@ -63,13 +53,12 @@ const SCCProductPage = ({
 SCCProductPage.propTypes = {
   canCreate: PropTypes.bool,
   sccAccountId: PropTypes.number.isRequired,
-  sccProducts: PropTypes.array,
   sccProductsInit: PropTypes.array,
 };
 
 SCCProductPage.defaultProps = {
   canCreate: false,
-  sccProducts: [],
+  sccProductsInit: [],
 };
 
 export default SCCProductPage;

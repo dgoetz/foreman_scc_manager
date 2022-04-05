@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Button } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import EmptyState from 'foremanReact/components/common/EmptyState';
-import { foremanUrl } from 'foremanReact/common/helpers';
 import { syncSccAccountAction } from './SCCProductPageActions';
 
 export const EmptySccProducts = ({ canCreate, sccAccountId }) => {
