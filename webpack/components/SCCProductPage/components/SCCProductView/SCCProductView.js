@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Icon } from 'patternfly-react';
 import PropTypes from 'prop-types';
-import SCCRepoView from './SCCRepoView';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import { foremanUrl } from 'foremanReact/common/helpers';
 import {
@@ -18,6 +17,7 @@ import { BrowserRouter, Link } from 'react-router-dom';
 import { cloneDeep, filter, clone } from 'lodash';
 import ProductTreeExpander from '../common/ProductTreeExpander';
 import SubscribedProductsExpander from '../common/SubscribedProductsExpander';
+import SCCRepoView from './SCCRepoView';
 
 const addCheckBoxToTree = (tree) => {
   const checkProps = {};

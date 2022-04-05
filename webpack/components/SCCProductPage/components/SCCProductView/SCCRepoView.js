@@ -1,7 +1,8 @@
-import './SCCRepoView.scss';
+import { foremanUrl } from 'foremanReact/common/helpers';
+import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 
-import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import {
   Dropdown,
   DropdownItem,
@@ -10,8 +11,8 @@ import {
 } from '@patternfly/react-core';
 import { Icon } from 'patternfly-react';
 import { BrowserRouter, Link } from 'react-router-dom';
-import { foremanUrl } from 'foremanReact/common/helpers';
-import { sprintf, translate as __ } from 'foremanReact/common/I18n';
+
+import './SCCRepoView.scss';
 
 const createKatelloRepoLink = (repo, sccProductId) => {
   const url = foremanUrl(

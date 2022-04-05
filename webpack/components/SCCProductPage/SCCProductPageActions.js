@@ -7,8 +7,8 @@ import {
   actionTypeGenerator,
 } from 'foremanReact/redux/API';
 import { foremanUrl } from 'foremanReact/common/helpers';
-import { SCCPRODUCTPAGE_SUBSCRIBE } from './SCCProductPageConstants';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
+import { SCCPRODUCTPAGE_SUBSCRIBE } from './SCCProductPageConstants';
 
 export const subscribeProductsAction = (sccAccountId, sccProductIds) =>
   put({

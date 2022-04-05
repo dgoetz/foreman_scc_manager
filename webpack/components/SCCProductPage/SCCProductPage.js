@@ -1,5 +1,3 @@
-import './sccProductPage.scss';
-
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
@@ -9,6 +7,7 @@ import { TimesCircleIcon } from '@patternfly/react-icons';
 import SCCProductView from './components/SCCProductView/SCCProductView';
 import EmptySccProducts from './EmptySccProducts';
 import ProductSelector from './components/ProductSelector/ProductSelector';
+import './sccProductPage.scss';
 
 const SCCProductPage = ({
   canCreate,

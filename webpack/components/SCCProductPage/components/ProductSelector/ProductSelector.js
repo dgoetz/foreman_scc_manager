@@ -1,8 +1,5 @@
-import './ProductSelector.scss';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import GenericSelector from './GenericSelector';
-import TreeSelector from './TreeSelector';
 import { TimesIcon } from '@patternfly/react-icons';
 import {
   Button,
@@ -16,6 +13,9 @@ import {
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { uniq } from 'lodash';
+import './ProductSelector.scss';
+import GenericSelector from './GenericSelector';
+import TreeSelector from './TreeSelector';
 
 const resetSelectionStringProduct = __(' -- Select Product --');
 const resetSelectionStringVersion = __(' -- Select Version --');

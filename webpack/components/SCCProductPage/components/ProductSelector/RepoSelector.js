@@ -1,9 +1,9 @@
-import './RepoSelector.scss';
-
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
+
+import './RepoSelector.scss';
 
 const createRepoSelectOption = (repo, disableRepos) => (
   <SelectOption
