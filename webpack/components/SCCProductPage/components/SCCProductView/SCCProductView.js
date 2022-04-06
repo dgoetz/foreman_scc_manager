@@ -174,25 +174,6 @@ const SCCProductView = ({
               hasGuides
             />
           </Flex>
-          {subscriptionTaskId !== '' && (
-            <Flex>
-              <FlexItem>
-                <Button variant="link">
-                  <BrowserRouter>
-                    <Link
-                      to={sprintf(
-                        '/foreman_tasks/tasks/%s',
-                        subscriptionTaskId
-                      )}
-                      target="_blank"
-                    >
-                      {__('Show last product subscription task')}
-                    </Link>
-                  </BrowserRouter>
-                </Button>
-              </FlexItem>
-            </Flex>
-          )}
         </CardBody>
       )}
       {sccProducts.length === 0 && (
@@ -202,6 +183,36 @@ const SCCProductView = ({
           )}
         </CardBody>
       )}
+      <Flex>
+        {sccProducts.length > 0 && (
+          <FlexItem>
+            <Button variant="link">
+              <BrowserRouter>
+                <Link
+                  to="/foreman_tasks/tasks/?search=Subscribe+SCC+Product"
+                  target="_blank"
+                >
+                  {__('Show all subscription tasks')}
+                </Link>
+              </BrowserRouter>
+            </Button>
+          </FlexItem>
+        )}
+        {subscriptionTaskId !== '' && (
+          <FlexItem>
+            <Button variant="link">
+              <BrowserRouter>
+                <Link
+                  to={sprintf('/foreman_tasks/tasks/%s', subscriptionTaskId)}
+                  target="_blank"
+                >
+                  {__('Show last product subscription task')}
+                </Link>
+              </BrowserRouter>
+            </Button>
+          </FlexItem>
+        )}
+      </Flex>
     </Card>
   );
 };
