@@ -12,7 +12,7 @@ import {
 import { Icon } from 'patternfly-react';
 import { BrowserRouter, Link } from 'react-router-dom';
 
-import './SCCRepoView.scss';
+import './styles.scss';
 
 const createKatelloRepoLink = (repo, sccProductId) => {
   const url = foremanUrl(

@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'foremanReact/common/I18n';
-import GenericExpander from './GenericExpander';
+import SCCGenericExpander from '../SCCGenericExpander';
 
-const SubscribedProductsExpander = ({ setExpandAllInParent }) => {
+const SCCSubscribedProductsExpander = ({ setExpandAllInParent }) => {
   const selectOptionSubscribedOnly = __('Show only subscribed products');
   const selectOptionShowAll = __('Show all products');
   const initSelectionOption = __('Show/Hide unsubscribed');
 
   return (
     <>
-      <GenericExpander
+      <SCCGenericExpander
         setInParent={setExpandAllInParent}
         selectOptionOpen={selectOptionShowAll}
         selectOptionClose={selectOptionSubscribedOnly}
@@ -20,10 +20,10 @@ const SubscribedProductsExpander = ({ setExpandAllInParent }) => {
   );
 };
 
-SubscribedProductsExpander.propTypes = {
+SCCSubscribedProductsExpander.propTypes = {
   setExpandAllInParent: PropTypes.func.isRequired,
 };
 
-SubscribedProductsExpander.defaultProps = {};
+SCCSubscribedProductsExpander.defaultProps = {};
 
-export default SubscribedProductsExpander;
+export default SCCSubscribedProductsExpander;

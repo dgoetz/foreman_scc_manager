@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Stack, StackItem } from '@patternfly/react-core';
-import SCCProductView from './components/SCCProductView/SCCProductView';
+import SCCProductView from './components/SCCProductView';
 import EmptySccProducts from './EmptySccProducts';
-import ProductSelector from './components/ProductSelector/ProductSelector';
+import SCCProductPicker from './components/SCCProductPicker';
 import './sccProductPage.scss';
 
 const SCCProductPage = ({
@@ -37,7 +37,7 @@ const SCCProductPage = ({
       <br />
       <StackItem />
       <StackItem>
-        <ProductSelector
+        <SCCProductPicker
           sccProducts={sccProductsInit}
           sccAccountId={sccAccountId}
           editProductId={productToEdit}

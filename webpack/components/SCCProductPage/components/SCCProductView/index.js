@@ -15,9 +15,9 @@ import {
 } from '@patternfly/react-core';
 import { BrowserRouter, Link } from 'react-router-dom';
 import { cloneDeep, filter, clone } from 'lodash';
-import ProductTreeExpander from '../common/ProductTreeExpander';
-import SubscribedProductsExpander from '../common/SubscribedProductsExpander';
-import SCCRepoView from './SCCRepoView';
+import SCCProductTreeExpander from '../common/SCCProductTreeExpander';
+import SCCSubscribedProductsExpander from '../common/SCCSubscribedProductsExpander';
+import SCCRepoView from './components/SCCRepoView';
 
 const addCheckBoxToTree = (tree) => {
   const checkProps = {};
@@ -160,8 +160,8 @@ const SCCProductView = ({
       {sccProducts.length > 0 && (
         <CardBody>
           <Flex>
-            <ProductTreeExpander setExpandAllInParent={setExpandAllFromChild} />
-            <SubscribedProductsExpander
+            <SCCProductTreeExpander setExpandAllInParent={setExpandAllFromChild} />
+            <SCCSubscribedProductsExpander
               setExpandAllInParent={setShowAllFromChild}
             />
           </Flex>

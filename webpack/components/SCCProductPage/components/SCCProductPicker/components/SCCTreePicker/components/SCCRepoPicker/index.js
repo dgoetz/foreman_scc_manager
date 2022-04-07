@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
 
-import './RepoSelector.scss';
+import './styles.scss';
 
 const createRepoSelectOption = (repo, disableRepos) => (
   <SelectOption
@@ -44,7 +44,7 @@ const setRepoSelection = (
 
 // disableRepos makes sure that repos can only be selected if the corresponding product
 // is also selected
-const RepoSelector = ({
+const SCCRepoPicker = ({
   sccRepos,
   disableRepos,
   activateDebugFilter,
@@ -134,7 +134,7 @@ const RepoSelector = ({
   );
 };
 
-RepoSelector.propTypes = {
+SCCRepoPicker.propTypes = {
   sccRepos: PropTypes.array,
   disableRepos: PropTypes.bool,
   activateDebugFilter: PropTypes.bool,
@@ -143,11 +143,11 @@ RepoSelector.propTypes = {
   setSelectedReposFromChild: PropTypes.func.isRequired,
 };
 
-RepoSelector.defaultProps = {
+SCCRepoPicker.defaultProps = {
   sccRepos: [],
   disableRepos: false,
   activateDebugFilter: false,
   productAlreadySynced: false,
 };
 
-export default RepoSelector;
+export default SCCRepoPicker;

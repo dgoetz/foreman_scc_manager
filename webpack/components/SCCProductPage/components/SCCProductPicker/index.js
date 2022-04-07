@@ -13,9 +13,9 @@ import {
 } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { uniq } from 'lodash';
-import './ProductSelector.scss';
-import GenericSelector from './GenericSelector';
-import TreeSelector from './TreeSelector';
+import './styles.scss';
+import SCCGenericPicker from './components/SCCGenericPicker';
+import SCCTreePicker from './components/SCCTreePicker';
 
 const resetSelectionStringProduct = __(' -- Select Product --');
 const resetSelectionStringVersion = __(' -- Select Version --');
@@ -44,7 +44,7 @@ const filterArchByVersionAndProduct = (sccProducts, product, version) =>
       .map((i) => i.arch)
   ).sort();
 
-const ProductSelector = ({
+const SCCProductPicker = ({
   sccProducts,
   sccAccountId,
   editProductId,
@@ -138,7 +138,7 @@ const ProductSelector = ({
           <Flex direction={{ default: 'column' }}>
             <Flex>
               <FlexItem>
-                <GenericSelector
+                <SCCGenericPicker
                   key="prod-select"
                   selectionItems={
                     selectedProduct === ''
@@ -155,7 +155,7 @@ const ProductSelector = ({
                 />
               </FlexItem>
               <FlexItem>
-                <GenericSelector
+                <SCCGenericPicker
                   key="vers-select"
                   selectionItems={
                     selectedVersion === ''
@@ -172,7 +172,7 @@ const ProductSelector = ({
                 />
               </FlexItem>
               <FlexItem>
-                <GenericSelector
+                <SCCGenericPicker
                   key="arch-select"
                   selectionItems={
                     selectedArch === ''
@@ -205,7 +205,7 @@ const ProductSelector = ({
             </Flex>
             <FlexItem>
               {showSearchTree && (
-                <TreeSelector
+                <SCCTreePicker
                   sccProducts={filteredSccProducts}
                   sccAccountId={sccAccountId}
                   resetFormFromParent={resetTreeForm}
@@ -220,16 +220,16 @@ const ProductSelector = ({
   );
 };
 
-ProductSelector.propTypes = {
+SCCProductPicker.propTypes = {
   sccProducts: PropTypes.array,
   sccAccountId: PropTypes.number.isRequired,
   editProductId: PropTypes.number,
   handleSubscribeCallback: PropTypes.func.isRequired,
 };
 
-ProductSelector.defaultProps = {
+SCCProductPicker.defaultProps = {
   sccProducts: [],
   editProductId: 0,
 };
 
-export default ProductSelector;
+export default SCCProductPicker;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Flex, FlexItem, Select, SelectOption } from '@patternfly/react-core';
 
-const GenericExpander = ({
+const SCCGenericExpander = ({
   setInParent,
   selectOptionOpen,
   selectOptionClose,
@@ -48,13 +48,13 @@ const GenericExpander = ({
   );
 };
 
-GenericExpander.propTypes = {
+SCCGenericExpander.propTypes = {
   setInParent: PropTypes.func.isRequired,
   selectOptionOpen: PropTypes.string.isRequired,
   selectOptionClose: PropTypes.string.isRequired,
   initLabel: PropTypes.string.isRequired,
 };
 
-GenericExpander.deaultProps = {};
+SCCGenericExpander.deaultProps = {};
 
-export default GenericExpander;
+export default SCCGenericExpander;

@@ -13,9 +13,9 @@ import {
   CardBody,
 } from '@patternfly/react-core';
 import { cloneDeep, merge } from 'lodash';
-import RepoSelector from './RepoSelector';
-import { subscribeProductsWithReposAction } from '../../SCCProductPageActions';
-import ProductTreeExpander from '../common/ProductTreeExpander';
+import SCCRepoPicker from './components/SCCRepoPicker';
+import { subscribeProductsWithReposAction } from '../../../../SCCProductPageActions';
+import SCCProductTreeExpander from '../../../common/SCCProductTreeExpander';
 
 const addCheckBoxToTree = (tree) => {
   const checkProps = {};
@@ -31,7 +31,7 @@ const addParentToTree = (tree, par) => {
   return tree;
 };
 
-const addRepoSelectorToTree = (
+const addSCCRepoPickerToTree = (
   tree,
   disableRepos,
   activateDebugFilter,
@@ -39,7 +39,7 @@ const addRepoSelectorToTree = (
 ) => {
   tree.customBadgeContent[0] = (
     <Tooltip content={__('Filter repositories')}>
-      <RepoSelector
+      <SCCRepoPicker
         sccRepos={tree.scc_repositories}
         disableRepos={tree.product_id === null && !tree.checkProps.checked}
         activateDebugFilter={activateDebugFilter}
@@ -60,7 +60,7 @@ const setupTreeViewListItem = (
 ) => {
   tree.customBadgeContent = [];
   addCheckBoxToTree(tree);
-  addRepoSelectorToTree(
+  addSCCRepoPickerToTree(
     tree,
     tree.product_id === null,
     activateDebugFilter,
@@ -87,7 +87,7 @@ const checkAllParents = (
 ) => {
   if (!tree.checkProps.checked) {
     tree.checkProps.checked = true;
-    addRepoSelectorToTree(
+    addSCCRepoPickerToTree(
       tree,
       false,
       activateDebugFilter,
@@ -111,7 +111,7 @@ const uncheckAllChildren = (
 ) => {
   if (tree.product_id === null) {
     tree.checkProps.checked = false;
-    addRepoSelectorToTree(
+    addSCCRepoPickerToTree(
       tree,
       true,
       activateDebugFilter,
@@ -132,7 +132,7 @@ const getRootParent = (tree) => {
   return tree;
 };
 
-const TreeSelector = ({
+const SCCTreePicker = ({
   sccProducts,
   sccAccountId,
   resetFormFromParent,
@@ -231,7 +231,7 @@ const TreeSelector = ({
       <CardBody>
         <Flex direction={{ default: 'column' }}>
           <Flex>
-            <ProductTreeExpander setExpandAllInParent={setExpandAllFromChild} />
+            <SCCProductTreeExpander setExpandAllInParent={setExpandAllFromChild} />
             <FlexItem>
               <Tooltip
                 content={__(
@@ -268,15 +268,15 @@ const TreeSelector = ({
   );
 };
 
-TreeSelector.propTypes = {
+SCCTreePicker.propTypes = {
   sccProducts: PropTypes.array,
   sccAccountId: PropTypes.number.isRequired,
   resetFormFromParent: PropTypes.func.isRequired,
   handleSubscribeCallback: PropTypes.func.isRequired,
 };
 
-TreeSelector.defaultProps = {
+SCCTreePicker.defaultProps = {
   sccProducts: [],
 };
 
-export default TreeSelector;
+export default SCCTreePicker;
