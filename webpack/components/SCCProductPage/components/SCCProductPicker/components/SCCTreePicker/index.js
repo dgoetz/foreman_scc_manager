@@ -12,7 +12,7 @@ import {
   Card,
   CardBody,
 } from '@patternfly/react-core';
-import { cloneDeep, merge } from 'lodash';
+import { cloneDeep, merge, clone } from 'lodash';
 import SCCRepoPicker from './components/SCCRepoPicker';
 import { subscribeProductsWithReposAction } from '../../../../SCCProductPageActions';
 import SCCProductTreeExpander from '../../../common/SCCProductTreeExpander';
@@ -147,12 +147,14 @@ const SCCTreePicker = ({
   const [activateDebugFilter, setActivateDebugFilter] = useState(false);
 
   const setSelectedReposFromChild = (sccProductId, repoArray) => {
+    const newSelectedRepos = clone(selectedRepos);
     if (repoArray.length !== 0) {
       // do not use setSelectedRepos method, as we do not want to trigger a re-render
-      selectedRepos[sccProductId] = repoArray;
-    } else if (selectedRepos !== {} && sccProductId in selectedRepos) {
-      delete selectedRepos[sccProductId];
+      newSelectedRepos[sccProductId] = repoArray;
+    } else if (newSelectedRepos !== {} && sccProductId in newSelectedRepos) {
+      delete newSelectedRepos[sccProductId];
     }
+    setSelectedRepos(newSelectedRepos);
   };
 
   const [sccProductTree, setSccProductTree] = useState(
@@ -177,6 +179,8 @@ const SCCTreePicker = ({
         )
       )
     );
+    // some thorough cleaning is required for hash maps
+    Object.keys(selectedRepos).forEach((k) => delete selectedRepos[k]);
   }, [sccProducts]);
 
   const setExpandAllFromChild = (expandAllFromChild) => {
@@ -231,7 +235,9 @@ const SCCTreePicker = ({
       <CardBody>
         <Flex direction={{ default: 'column' }}>
           <Flex>
-            <SCCProductTreeExpander setExpandAllInParent={setExpandAllFromChild} />
+            <SCCProductTreeExpander
+              setExpandAllInParent={setExpandAllFromChild}
+            />
             <FlexItem>
               <Tooltip
                 content={__(
@@ -258,7 +264,11 @@ const SCCTreePicker = ({
             />
           </Flex>
           <Flex>
-            <Button variant="primary" onClick={submitForm}>
+            <Button
+              variant="primary"
+              onClick={submitForm}
+              isDisabled={Object.keys(selectedRepos).length === 0}
+            >
               {__('Add product(s)')}
             </Button>
           </Flex>
