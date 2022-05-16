@@ -113,9 +113,21 @@ class SccAccountsController < ApplicationController
   end
 
   def scc_product_hash(scc_product)
-    scc_product.as_json(:only => [:scc_id, :id, :arch, :version, :product_id, :subscription_valid],
-                        include: { :scc_repositories => { :only => [:id, :name, :katello_root_repository_id, :subscription_valid] } })
-               .merge('name' => scc_product.pretty_name, 'product_category' => scc_product.name)
+    scc_product_json = scc_product.as_json(:only => [:scc_id, :id, :arch, :version, :product_id, :subscription_valid],
+                                           include: { :scc_repositories => { :only => [:id, :name, :subscription_valid] } })
+                                  .merge('name' => scc_product.pretty_name, 'product_category' => scc_product.name)
+    # find if and which Katello root repository is associated with this SCC product
+    repo_ids_katello = scc_product.product.blank? || scc_product.product.root_repository_ids.blank? ? nil : scc_product.product.root_repository_ids
+    scc_product_json['scc_repositories'].each do |repo|
+      # byebug
+      if repo_ids_katello.blank?
+        repo['katello_root_repository_id'] = nil
+      else
+        repo_ids_scc = scc_product.scc_repositories.find(repo['id']).katello_root_repository_ids
+        repo['katello_root_repository_id'] = repo_ids_scc.blank? ? nil : (repo_ids_scc & repo_ids_katello).first
+      end
+    end
+    scc_product_json
   end
 
   def get_product_tree_hash(scc_product_base)

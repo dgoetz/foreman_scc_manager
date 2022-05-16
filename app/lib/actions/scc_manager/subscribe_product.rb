@@ -29,7 +29,12 @@ module Actions
           else
             # at this point, we need to make sure that the repository list is valid
             # we want to subscribe only to repos that we have not subscribed before
-            scc_repos = scc_product.scc_repositories.where(id: scc_repos_to_subscribe[scc_product.id]).where(katello_root_repository_id: nil)
+            repo_ids_katello = scc_product.product.blank? || scc_product.product.root_repository_ids.blank? ? nil : scc_product.product.root_repository_ids
+            scc_repos = scc_product.scc_repositories.where(id: scc_repos_to_subscribe[scc_product.id])
+            unless repo_ids_katello.nil? || scc_repos.empty?
+              # remove repo if Katello repo is already associated
+              scc_repos.reject { |repo| (repo.katello_root_repositories & repo_ids_katello).present? }
+            end
           end
           if scc_repos.empty?
             ::Foreman::Logging.logger('foreman_scc_manager')
