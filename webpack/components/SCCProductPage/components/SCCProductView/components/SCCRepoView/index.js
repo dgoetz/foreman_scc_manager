@@ -62,7 +62,9 @@ const SCCRepoView = ({ sccRepos, sccProductId }) => {
   };
 
   const onFocus = () => {
-    const element = document.getElementById('toggle-id');
+    const element = document.getElementById(
+      sprintf('scc-repo-show-toggle-id-%s', sccProductId)
+    );
     element.focus();
   };
 
@@ -79,7 +81,11 @@ const SCCRepoView = ({ sccRepos, sccProductId }) => {
     <Dropdown
       onSelect={onSelect}
       toggle={
-        <BadgeToggle id="toggle-id" onToggle={onToggle}>
+        <BadgeToggle
+          id={sprintf('scc-repo-show-toggle-id-%s', sccProductId)}
+          key={sprintf('scc-repo-show-toggle-id-%s', sccProductId)}
+          onToggle={onToggle}
+        >
           {sprintf(
             __('Repositories (%s/%s)'),
             sccRepos.filter((r) => r.katello_root_repository_id !== null)

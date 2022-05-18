@@ -160,7 +160,9 @@ const SCCProductView = ({
       {sccProducts.length > 0 && (
         <CardBody>
           <Flex>
-            <SCCProductTreeExpander setExpandAllInParent={setExpandAllFromChild} />
+            <SCCProductTreeExpander
+              setExpandAllInParent={setExpandAllFromChild}
+            />
             <SCCSubscribedProductsExpander
               setExpandAllInParent={setShowAllFromChild}
             />

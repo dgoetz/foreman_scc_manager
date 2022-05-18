@@ -8,7 +8,7 @@ export const subscribeProductsWithReposAction = (
 ) =>
   put({
     type: API_OPERATIONS.PUT,
-    key: `subscribe_key${sccAccountId.toString()}${sccProductData.toString()}`,
+    key: `subscribe_key_${sccAccountId}_${sccProductData[0].scc_product_id}_${sccProductData[0].repository_list}`,
     url: `/api/scc_accounts/${sccAccountId}/bulk_subscribe_with_repos`,
     params: { scc_product_data: sccProductData },
     successToast: (response) =>
@@ -23,7 +23,7 @@ export const subscribeProductsWithReposAction = (
 export const syncSccAccountAction = (sccAccountId) =>
   put({
     type: API_OPERATIONS.PUT,
-    key: `syncSccAccountKey${sccAccountId.toString()}`,
+    key: `syncSccAccountKey_${sccAccountId}`,
     url: `/api/scc_accounts/${sccAccountId}/sync`,
     successToast: () => __('Sync task started.'),
     errorToast: (error) => __('Failed to add task to queue.'),
