@@ -45,6 +45,7 @@ const addSCCRepoPickerToTree = (
         activateDebugFilter={activateDebugFilter}
         productAlreadySynced={tree.product_id !== null}
         sccProductId={tree.id}
+        sccProductName={tree.name}
         setSelectedReposFromChild={setSelectedReposFromChild}
       />{' '}
     </Tooltip>
@@ -146,14 +147,21 @@ const SCCTreePicker = ({
   // the debug filter is actually a 'includeDebugRepos' setting which should not be active by default
   const [activateDebugFilter, setActivateDebugFilter] = useState(false);
 
-  const setSelectedReposFromChild = (sccProductId, repoArray) => {
-    const newSelectedRepos = clone(selectedRepos);
-    if (repoArray.length !== 0) {
-      // do not use setSelectedRepos method, as we do not want to trigger a re-render
-      newSelectedRepos[sccProductId] = repoArray;
-    } else if (newSelectedRepos !== {} && sccProductId in newSelectedRepos) {
-      delete newSelectedRepos[sccProductId];
+  const setSelectedReposFromChild = (
+    productId,
+    productName,
+    repoIds,
+    repoNames
+  ) => {
+    if (repoIds.length !== 0) {
+      selectedRepos[productId] = {};
+      selectedRepos[productId].repoIds = repoIds;
+      selectedRepos[productId].productName = productName;
+      selectedRepos[productId].repoNames = repoNames;
+    } else if (selectedRepos !== {} && productId in selectedRepos) {
+      delete selectedRepos[productId];
     }
+    const newSelectedRepos = clone(selectedRepos);
     setSelectedRepos(newSelectedRepos);
   };
 
@@ -214,7 +222,7 @@ const SCCTreePicker = ({
     Object.keys(selectedRepos).forEach((k) => {
       const repo = {
         scc_product_id: parseInt(k, 10),
-        repository_list: selectedRepos[k],
+        repository_list: selectedRepos[k].repoIds,
       };
       productsToSubscribe.push(repo);
     });
@@ -222,7 +230,8 @@ const SCCTreePicker = ({
       subscribeProductsWithReposAction(
         sccAccountId,
         productsToSubscribe,
-        handleSubscribeCallback
+        handleSubscribeCallback,
+        selectedRepos
       )
     );
     // reset data structure and form
@@ -231,50 +240,52 @@ const SCCTreePicker = ({
   };
 
   return (
-    <Card>
-      <CardBody>
-        <Flex direction={{ default: 'column' }}>
-          <Flex>
-            <SCCProductTreeExpander
-              setExpandAllInParent={setExpandAllFromChild}
-            />
-            <FlexItem>
-              <Tooltip
-                content={__(
-                  'If this option is enabled, debug and source pool repositories are automatically selected if you select a product. This option is disabled by default. It applies for unselected products, only. Already selected products are not filtered.'
-                )}
+    <>
+      <Card>
+        <CardBody>
+          <Flex direction={{ default: 'column' }}>
+            <Flex>
+              <SCCProductTreeExpander
+                setExpandAllInParent={setExpandAllFromChild}
+              />
+              <FlexItem>
+                <Tooltip
+                  content={__(
+                    'If this option is enabled, debug and source pool repositories are automatically selected if you select a product. This option is disabled by default. It applies for unselected products, only. Already selected products are not filtered.'
+                  )}
+                >
+                  <Switch
+                    id="filter-debug-switch"
+                    onChange={debugFilterChange}
+                    isChecked={activateDebugFilter}
+                    label={__('Include Debug and Source Pool repositories')}
+                  />
+                </Tooltip>
+              </FlexItem>
+            </Flex>
+            <Flex>
+              <TreeView
+                data={sccProductTree}
+                allExpanded={expandAll}
+                onCheck={onCheck}
+                hasChecks
+                hasBadges
+                hasGuides
+              />
+            </Flex>
+            <Flex>
+              <Button
+                variant="primary"
+                onClick={submitForm}
+                isDisabled={Object.keys(selectedRepos).length === 0}
               >
-                <Switch
-                  id="filter-debug-switch"
-                  onChange={debugFilterChange}
-                  isChecked={activateDebugFilter}
-                  label={__('Include Debug and Source Pool repositories')}
-                />
-              </Tooltip>
-            </FlexItem>
+                {__('Add product(s)')}
+              </Button>
+            </Flex>
           </Flex>
-          <Flex>
-            <TreeView
-              data={sccProductTree}
-              allExpanded={expandAll}
-              onCheck={onCheck}
-              hasChecks
-              hasBadges
-              hasGuides
-            />
-          </Flex>
-          <Flex>
-            <Button
-              variant="primary"
-              onClick={submitForm}
-              isDisabled={Object.keys(selectedRepos).length === 0}
-            >
-              {__('Add product(s)')}
-            </Button>
-          </Flex>
-        </Flex>
-      </CardBody>
-    </Card>
+        </CardBody>
+      </Card>
+    </>
   );
 };
 

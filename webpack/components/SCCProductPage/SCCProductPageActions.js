@@ -4,20 +4,17 @@ import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 export const subscribeProductsWithReposAction = (
   sccAccountId,
   sccProductData,
-  handleSubscription
+  handleSubscription,
+  sccSubscriptionData
 ) =>
   put({
     type: API_OPERATIONS.PUT,
     key: `subscribe_key_${sccAccountId}_${sccProductData[0].scc_product_id}_${sccProductData[0].repository_list}`,
     url: `/api/scc_accounts/${sccAccountId}/bulk_subscribe_with_repos`,
     params: { scc_product_data: sccProductData },
-    successToast: (response) =>
-      sprintf(
-        __('Subscription task %s started successfully.'),
-        response.data.id
-      ),
     errorToast: (error) => __('Starting the subscription task failed.'),
-    handleSuccess: (response) => handleSubscription(response.data.id),
+    handleSuccess: (response) =>
+      handleSubscription(response.data.id, sccSubscriptionData),
   });
 
 export const syncSccAccountAction = (sccAccountId) =>

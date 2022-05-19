@@ -50,6 +50,7 @@ const SCCRepoPicker = ({
   activateDebugFilter,
   productAlreadySynced,
   sccProductId,
+  sccProductName,
   setSelectedReposFromChild,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,6 +77,7 @@ const SCCRepoPicker = ({
     setSelected(selectedRepos);
     setSelectedReposFromChild(
       sccProductId,
+      sccProductName,
       sccRepos
         // make sure that we do not request already subscribed repositories
         .filter(
@@ -83,7 +85,15 @@ const SCCRepoPicker = ({
             selectedRepos.includes(repo.name) &&
             repo.katello_root_repository_id === null
         )
-        .map((repo) => repo.id)
+        .map((repo) => repo.id),
+      sccRepos
+        // make sure that we do not request already subscribed repositories
+        .filter(
+          (repo) =>
+            selectedRepos.includes(repo.name) &&
+            repo.katello_root_repository_id === null
+        )
+        .map((repo) => repo.name)
     );
   }, [
     sccRepos,
@@ -91,6 +101,7 @@ const SCCRepoPicker = ({
     activateDebugFilter,
     productAlreadySynced,
     sccProductId,
+    setSelectedReposFromChild,
   ]);
 
   const onSelect = (event, selection) => {
@@ -103,6 +114,7 @@ const SCCRepoPicker = ({
     setSelected(selectedRepos);
     setSelectedReposFromChild(
       sccProductId,
+      sccProductName,
       sccRepos
         // make sure that we do not request already subscribed repositories
         .filter(
@@ -110,7 +122,15 @@ const SCCRepoPicker = ({
             selectedRepos.includes(repo.name) &&
             repo.katello_root_repository_id === null
         )
-        .map((repo) => repo.id)
+        .map((repo) => repo.id),
+      sccRepos
+        // make sure that we do not request already subscribed repositories
+        .filter(
+          (repo) =>
+            selectedRepos.includes(repo.name) &&
+            repo.katello_root_repository_id === null
+        )
+        .map((repo) => repo.name)
     );
   };
 
@@ -140,6 +160,7 @@ SCCRepoPicker.propTypes = {
   activateDebugFilter: PropTypes.bool,
   productAlreadySynced: PropTypes.bool,
   sccProductId: PropTypes.number.isRequired,
+  sccProductName: PropTypes.string.isRequired,
   setSelectedReposFromChild: PropTypes.func.isRequired,
 };
 
