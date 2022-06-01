@@ -31,7 +31,7 @@ const generateProductList = (reposToSubscribe) => (
     key={reposToSubscribe.map((p) => p.productName)}
     component={TextListVariants.ol}
   >
-    {reposToSubscribe.map((p) => generateRepoList(p.repoNames, p.productName))};
+    {reposToSubscribe.map((p) => generateRepoList(p.repoNames, p.productName))}
   </TextList>
 );
 
