@@ -95,7 +95,7 @@ const setupTreeViewListItem = (tree, isRoot, editProductTree) => {
     }
   }
   if ('children' in tree) {
-    tree.children = tree.children.map(setupTreeViewListItem, false);
+    tree.children = tree.children.map((c) => setupTreeViewListItem(c, false, editProductTree));
   }
   return tree;
 };
