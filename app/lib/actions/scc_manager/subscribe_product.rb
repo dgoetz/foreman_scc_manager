@@ -4,6 +4,7 @@ module Actions
       # scc_product is an ActiveRecord object of Class SccProduct
       # scc_repos_to_subscribe is a hash with the product id as keys and an array of
       # repos to subscribe as values
+      # rubocop:disable Metrics/MethodLength
       def plan(scc_product, scc_repos_to_subscribe)
         if scc_product.product
           ::Foreman::Logging.logger('foreman_scc_manager')
@@ -62,6 +63,7 @@ module Actions
           plan_self
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def finalize
         # connect Scc products and Katello products
