@@ -45,24 +45,22 @@ const GenericSelector = ({
   };
 
   return (
-    <React.Fragment>
-      <ContextSelector
-        toggleText={selected}
-        onSearchInputChange={onSearchInputChange}
-        isOpen={isOpen}
-        searchInputValue={searchValue}
-        onToggle={onToggle}
-        onSelect={onSelect}
-        onSearchButtonClick={onSearchButtonClick}
-        screenReaderLabel={screenReaderLabel}
-      >
-        {filteredItems.map((item, index) => (
-          <ContextSelectorItem key={index}>
-            {item || 'no arch'}
-          </ContextSelectorItem>
-        ))}
-      </ContextSelector>
-    </React.Fragment>
+    <ContextSelector
+      toggleText={selected}
+      onSearchInputChange={onSearchInputChange}
+      isOpen={isOpen}
+      searchInputValue={searchValue}
+      onToggle={onToggle}
+      onSelect={onSelect}
+      onSearchButtonClick={onSearchButtonClick}
+      screenReaderLabel={screenReaderLabel}
+    >
+      {filteredItems.map((item, index) => (
+        <ContextSelectorItem key={index}>
+          {item || 'no arch'}
+        </ContextSelectorItem>
+      ))}
+    </ContextSelector>
   );
 };
 

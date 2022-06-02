@@ -31,20 +31,18 @@ const SCCGenericExpander = ({
   };
 
   return (
-    <>
-      <Flex>
-        <FlexItem>
-          <Select
-            onToggle={onToggle}
-            onSelect={onSelect}
-            selections={label}
-            isOpen={isOpen}
-          >
-            {options}
-          </Select>
-        </FlexItem>
-      </Flex>
-    </>
+    <Flex>
+      <FlexItem>
+        <Select
+          onToggle={onToggle}
+          onSelect={onSelect}
+          selections={label}
+          isOpen={isOpen}
+        >
+          {options}
+        </Select>
+      </FlexItem>
+    </Flex>
   );
 };
 
