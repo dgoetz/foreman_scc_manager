@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { Stack, StackItem } from '@patternfly/react-core';
+import { useDispatch } from 'react-redux';
+import { translate as __ } from 'foremanReact/common/I18n';
+import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import SCCProductView from './components/SCCProductView';
 import EmptySccProducts from './EmptySccProducts';
 import SCCProductPicker from './components/SCCProductPicker';
-import { sprintf, translate as __ } from 'foremanReact/common/I18n';
-import { useForemanModal } from 'foremanReact/components/ForemanModal/ForemanModalHooks';
 import SCCProductPickerModal from './components/SCCProductPickerModal';
 import './sccProductPage.scss';
-import { useDispatch } from 'react-redux';
 
 const SCCProductPage = ({
   canCreate,

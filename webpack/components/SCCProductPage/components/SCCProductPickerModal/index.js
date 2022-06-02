@@ -6,7 +6,6 @@ import { sprintf, translate as __ } from 'foremanReact/common/I18n';
 import {
   Card,
   CardBody,
-  Icon,
   TextContent,
   Text,
   TextList,

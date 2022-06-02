@@ -1,5 +1,5 @@
 import { API_OPERATIONS, put } from 'foremanReact/redux/API';
-import { sprintf, translate as __ } from 'foremanReact/common/I18n';
+import { translate as __ } from 'foremanReact/common/I18n';
 
 export const subscribeProductsWithReposAction = (
   sccAccountId,
